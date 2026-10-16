@@ -11,6 +11,7 @@ extension UTMControl {
     case appNotFound
     case didNotStart(vmName: String)
     case noIPAddress(vmName: String)
+    case automationDenied
 
     var errorDescription: String? {
       switch self {
@@ -21,6 +22,9 @@ extension UTMControl {
       case .appNotFound: "UTM.app could not be found."
       case .didNotStart(let name): "UTM did not start \(name)."
       case .noIPAddress(let name): "\(name) reported no IP address."
+      case .automationDenied:
+        "macOS isn't letting Hangar control UTM. Turn on UTM under Hangar in System Settings "
+          + "› Privacy & Security › Automation."
       }
     }
   }

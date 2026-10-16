@@ -5,6 +5,8 @@ private enum Constants {
   /// `utmctl list` prints "UUID  Status  Name"; the name may contain spaces.
   static let listFieldCount = 3
   static let successStatus: Int32 = 0
+  /// errAEEventNotPermitted: macOS refused to let Hangar send Apple Events to UTM.
+  static let eventNotPermitted = "-1743"
 }
 
 /// Wraps the `utmctl` CLI bundled inside UTM.app. utmctl drives UTM over Apple Events,
@@ -21,15 +23,21 @@ struct UTMControl: Sendable {
 
   /// Every registered VM with its current status.
   func list() async throws -> [VirtualMachine] {
-    let output = try await run(["list"])
-    return output.split(separator: "\n").dropFirst()
+    Self.parseList(try await run(["list"]))
+  }
+
+  /// Rows of `utmctl list` output. Only lines starting with a UUID are VMs, so a header or
+  /// a stray message is never mistaken for one.
+  static func parseList(_ output: String) -> [VirtualMachine] {
+    output.split(separator: "\n")
       .compactMap { line in
         let fields = line.split(
           separator: " ",
           maxSplits: Constants.listFieldCount - 1,
           omittingEmptySubsequences: true
         )
-        guard fields.count == Constants.listFieldCount else { return nil }
+        guard fields.count == Constants.listFieldCount, UUID(uuidString: String(fields[0])) != nil
+        else { return nil }
         return VirtualMachine(
           id: String(fields[0]),
           name: fields[2].trimmingCharacters(in: .whitespaces),
@@ -61,7 +69,8 @@ struct UTMControl: Sendable {
       .filter { !$0.isEmpty }
   }
 
-  /// Runs utmctl off the main actor and returns what it printed.
+  /// Runs utmctl off the main actor and returns what it printed on stdout. Anything on
+  /// stderr is an error, even when utmctl exits with 0.
   private func run(_ arguments: [String]) async throws -> String {
     let path = path
     return
@@ -69,20 +78,22 @@ struct UTMControl: Sendable {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: path)
         process.arguments = arguments
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = pipe
+        let outPipe = Pipe()
+        let errorPipe = Pipe()
+        process.standardOutput = outPipe
+        process.standardError = errorPipe
         try process.run()
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
+        // Read stderr concurrently so a full pipe cannot stall utmctl.
+        async let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
+        let data = outPipe.fileHandleForReading.readDataToEndOfFile()
+        let errors = String(bytes: await errorData, encoding: .utf8) ?? ""
         process.waitUntilExit()
-        let output = String(bytes: data, encoding: .utf8) ?? ""
-        guard process.terminationStatus == Constants.successStatus else {
-          throw Failure.commandFailed(
-            command: arguments.first ?? "",
-            output: output.trimmingCharacters(in: .whitespacesAndNewlines)
-          )
+        let message = errors.trimmingCharacters(in: .whitespacesAndNewlines)
+        if message.contains(Constants.eventNotPermitted) { throw Failure.automationDenied }
+        guard process.terminationStatus == Constants.successStatus, message.isEmpty else {
+          throw Failure.commandFailed(command: arguments.first ?? "", output: message)
         }
-        return output
+        return String(bytes: data, encoding: .utf8) ?? ""
       }
       .value
   }
