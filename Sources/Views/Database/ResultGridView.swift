@@ -83,6 +83,9 @@ struct ResultGridView: NSViewRepresentable {
     func rebuildColumns(types: [String]) {
       guard let table else { return }
       table.tableColumns.forEach(table.removeTableColumn)
+      // Drop the old rows first: adding a column asks for cells in every visible row, and
+      // with a shorter result those rows no longer exist.
+      table.reloadData()
       let numbers = NSTableColumn(identifier: Constants.rowNumberIdentifier)
       numbers.title = ""
       numbers.width = Constants.rowNumberWidth
@@ -96,7 +99,10 @@ struct ResultGridView: NSViewRepresentable {
         column.minWidth = Constants.minimumColumnWidth
         table.addTableColumn(column)
       }
-      table.rowValues = { [weak self] row in self?.result.rows[row] ?? [] }
+      table.rowValues = { [weak self] row in
+        guard let rows = self?.result.rows, rows.indices.contains(row) else { return [] }
+        return rows[row]
+      }
       table.reloadData()
       table.scrollRowToVisible(0)
     }
@@ -132,7 +138,7 @@ struct ResultGridView: NSViewRepresentable {
         field.stringValue = String(firstRowNumber + row)
       } else {
         let column = Int(tableColumn.identifier.rawValue) ?? 0
-        let values = result.rows[row]
+        let values = values(at: row) ?? []
         let content = ResultGridText.cell(values.indices.contains(column) ? values[column] : nil)
         field.attributedStringValue = content.text
         field.alignment = content.alignment
@@ -182,8 +188,8 @@ struct ResultGridView: NSViewRepresentable {
       add("Copy Row", key: "c", modifiers: [.command, .shift]) { [weak self] in self?.copyRow(row) }
       if let insert = actions.insertStatement {
         add("Copy Row as INSERT") { [weak self] in
-          guard let self else { return }
-          Self.copy(insert(result.rows[row]))
+          guard let values = self?.values(at: row) else { return }
+          Self.copy(insert(values))
         }
       }
       if hasCell {
@@ -210,8 +216,14 @@ struct ResultGridView: NSViewRepresentable {
       menu.addItem(item)
     }
 
+    /// The row's values, or nil once a newer result no longer has that row — menu actions
+    /// run after the click, and the result can change in between.
+    private func values(at row: Int) -> [String?]? {
+      result.rows.indices.contains(row) ? result.rows[row] : nil
+    }
+
     private func value(_ row: Int, _ column: Int) -> String? {
-      let values = result.rows[row]
+      guard let values = values(at: row) else { return nil }
       return values.indices.contains(column) ? values[column] : nil
     }
 
@@ -220,10 +232,12 @@ struct ResultGridView: NSViewRepresentable {
     }
 
     private func copyRow(_ row: Int) {
-      Self.copy(result.rows[row].map { $0 ?? ResultGridText.null }.joined(separator: "\t"))
+      guard let values = values(at: row) else { return }
+      Self.copy(values.map { $0 ?? ResultGridText.null }.joined(separator: "\t"))
     }
 
     private func showFullValue(_ row: Int, _ column: Int) {
+      guard result.columns.indices.contains(column) else { return }
       let alert = NSAlert()
       alert.messageText = result.columns[column]
       let scroll = NSTextView.scrollableTextView()
