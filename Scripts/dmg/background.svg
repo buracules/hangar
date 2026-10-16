@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="420" viewBox="0 0 660 420">
+  <defs>
+    <!-- The icon's arch colours: light, so Finder's dark icon labels stay readable. -->
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#F7F9FC"/>
+      <stop offset="1" stop-color="#E4E9F1"/>
+    </linearGradient>
+  </defs>
+  <rect width="660" height="420" fill="url(#sky)"/>
+  <!-- a faint hangar arch behind the icons, from the app icon -->
+  <path d="M110 330 V 250 A 220 118 0 0 1 550 250 V 330" fill="none" stroke="#C3CCDA" stroke-opacity="0.55" stroke-width="1.5"/>
+  <!-- the floor line, with runway dashes -->
+  <line x1="0" y1="330" x2="660" y2="330" stroke="#C3CCDA" stroke-width="1"/>
+  <line x1="60" y1="352" x2="600" y2="352" stroke="#C3CCDA" stroke-opacity="0.7" stroke-width="1.5" stroke-dasharray="14 12"/>
+  <text x="48" y="66" font-family="SF Pro Display, Helvetica Neue, sans-serif" font-size="30" font-weight="700" fill="#25324A">Hangar</text>
+  <text x="48" y="90" font-family="SF Pro Text, Helvetica Neue, sans-serif" font-size="13" fill="#5C6B88">VMs, containers and dev servers, one click away.</text>
+  <!-- status dots from the icon's rack -->
+  <circle cx="160" cy="60" r="4" fill="#30D158"/>
+  <circle cx="174" cy="60" r="4" fill="#FFD60A"/>
+  <circle cx="188" cy="60" r="4" fill="#8E8E93"/>
+  <!-- arrow between the app (x 190) and Applications (x 470), icons centred at y 215 -->
+  <path d="M272 215 C 318 188, 342 188, 384 213" fill="none" stroke="#8C98AD" stroke-width="2" stroke-linecap="round" stroke-dasharray="1 7"/>
+  <!-- the arrowhead drawn out: AppKit's SVG renderer ignores markers -->
+  <path d="M377 205 L385 214 L373 217" fill="none" stroke="#8C98AD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="330" y="392" text-anchor="middle" font-family="SF Pro Text, Helvetica Neue, sans-serif" font-size="13" fill="#5C6B88">Drag Hangar to Applications to install</text>
+</svg>

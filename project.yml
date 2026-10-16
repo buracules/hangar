@@ -31,6 +31,7 @@ targets:
         MARKETING_VERSION: 0.1.0
         CURRENT_PROJECT_VERSION: 1
         ENABLE_APP_SANDBOX: NO
+        CODE_SIGN_ENTITLEMENTS: Sources/Hangar.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
     scheme:
       testTargets: [HangarTests]
