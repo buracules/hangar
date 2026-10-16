@@ -2,8 +2,8 @@ import Foundation
 import Observation
 
 private enum Constants {
+  /// Rows per page, in Data and in SQL results alike.
   static let pageSize = 200
-  static let sqlRowLimit = 1000
   static let historyLimit = 30
   /// Opened first when a database has it, as most apps keep their tables there.
   static let preferredSchema = "public"
@@ -62,6 +62,10 @@ final class DatabaseModel {
   private(set) var sqlElapsed: Duration?
   private(set) var isRunningSQL = false
   private(set) var history: [String] = []
+  /// The zero-based page of a single query's result.
+  private(set) var sqlPage = 0
+  /// The query being paged, as run; nil for scripts, which run once as written.
+  private var pagedQuery: String?
 
   private var containerID: String?
   /// Credentials typed into the sign-in form, used instead of the container's environment.
@@ -99,6 +103,16 @@ final class DatabaseModel {
 
   var hasNextPage: Bool { rows?.isTruncated ?? false }
   var hasPreviousPage: Bool { page > 0 }
+
+  /// The 1-based range of SQL result rows on screen, for a paged query.
+  var sqlPageRange: ClosedRange<Int>? {
+    guard pagedQuery != nil, let count = sqlResult?.rows.count, count > 0 else { return nil }
+    let first = sqlPage * Constants.pageSize + 1
+    return first...(first + count - 1)
+  }
+
+  var hasNextSQLPage: Bool { pagedQuery != nil && (sqlResult?.isTruncated ?? false) }
+  var hasPreviousSQLPage: Bool { pagedQuery != nil && sqlPage > 0 }
 
   // MARK: Connecting
 
@@ -226,7 +240,7 @@ final class DatabaseModel {
 
   // MARK: SQL
 
-  /// Runs the editor's SQL. A single query is capped and gets column types; anything else
+  /// Runs the editor's SQL. A single query is paged and gets column types; anything else
   /// runs as written and shows its last result or messages.
   func runSQL() async {
     let text = sql.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -234,18 +248,54 @@ final class DatabaseModel {
     isRunningSQL = true
     defer { isRunningSQL = false }
     remember(text)
+    sqlPage = 0
+    pagedQuery = nil
     let start = ContinuousClock.now
     do {
       if PostgresClient.isSingleQuery(text) {
         let query = PostgresClient.stripTrailingSemicolons(text)
         async let types = client.columnTypes(ofQuery: query, in: database)
-        sqlResult = try await client.select(query, database: database, limit: Constants.sqlRowLimit)
+        sqlResult = try await client.select(query, database: database, limit: Constants.pageSize)
         sqlColumnTypes = await types
+        pagedQuery = query
       } else {
         let results = try await client.run(text, database: database)
         sqlResult = results.last { !$0.columns.isEmpty } ?? mergedMessages(results)
         sqlColumnTypes = []
       }
+      sqlError = nil
+    } catch {
+      sqlResult = nil
+      sqlError = error.localizedDescription
+    }
+    sqlElapsed = ContinuousClock.now - start
+  }
+
+  func nextSQLPage() async {
+    guard hasNextSQLPage else { return }
+    sqlPage += 1
+    await loadSQLPage()
+  }
+
+  func previousSQLPage() async {
+    guard hasPreviousSQLPage else { return }
+    sqlPage -= 1
+    await loadSQLPage()
+  }
+
+  /// Runs the paged query again for the current page; the column types stay as they were.
+  private func loadSQLPage() async {
+    guard let client, let database, let query = pagedQuery, !isRunningSQL else { return }
+    isRunningSQL = true
+    defer { isRunningSQL = false }
+    let start = ContinuousClock.now
+    do {
+      sqlResult = try await client.select(
+        query,
+        database: database,
+        limit: Constants.pageSize,
+        offset: sqlPage * Constants.pageSize
+      )
       sqlError = nil
     } catch {
       sqlResult = nil

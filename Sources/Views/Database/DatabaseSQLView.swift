@@ -39,6 +39,7 @@ struct DatabaseSQLView: View {
       ResultGridView(
         result: result,
         types: model.sqlColumnTypes,
+        firstRowNumber: model.sqlPageRange?.lowerBound ?? 1,
         resetKey: resultKey
       )
     } else if model.sqlResult != nil {
@@ -52,10 +53,10 @@ struct DatabaseSQLView: View {
     }
   }
 
-  /// Changes with every run, so the grid reloads even when the same query runs again.
+  /// Changes with every run and page, so the grid reloads even for the same query.
   private var resultKey: String {
     let elapsed = model.sqlElapsed.map { String(describing: $0) } ?? ""
-    return "\(model.history.first ?? "")|\(elapsed)"
+    return "\(model.history.first ?? "")|\(model.sqlPage)|\(elapsed)"
   }
 
   private var footer: some View {
@@ -77,12 +78,23 @@ struct DatabaseSQLView: View {
       if let database = model.database {
         Text(verbatim: database).font(.mono(FontSize.smallMono))
       }
+      if model.hasPreviousSQLPage || model.hasNextSQLPage {
+        Button("Previous") { Task { await model.previousSQLPage() } }
+          .disabled(!model.hasPreviousSQLPage || model.isRunningSQL)
+        Button("Next") { Task { await model.nextSQLPage() } }
+          .disabled(!model.hasNextSQLPage || model.isRunningSQL)
+      }
     }
+    .controlSize(.small)
   }
 
-  /// "200 rows", "200+ rows" when capped, or the command tag: "INSERT 0 2".
+  /// "Rows 201–400" for a paged query, "3 rows" when it fits one page, or the command tag:
+  /// "INSERT 0 2".
   private func summary(_ result: QueryResult) -> String {
     guard !result.columns.isEmpty else { return result.messages.last ?? "Done" }
+    if let range = model.sqlPageRange, model.hasPreviousSQLPage || model.hasNextSQLPage {
+      return "Rows \(range.lowerBound)–\(range.upperBound)"
+    }
     let count = result.rows.count
     return "\(count)\(result.isTruncated ? "+" : "") row\(count == 1 ? "" : "s")"
   }
