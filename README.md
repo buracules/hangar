@@ -1,5 +1,7 @@
 # Hangar
 
+[![Hangar in 23 seconds — click to watch](Docs/Images/hangar-intro.jpg)](https://github.com/buracules/hangar/releases/download/v0.1.0/Hangar-0.1.0-intro.mp4)
+
 A native macOS menu bar app and CLI for everything you develop against: UTM virtual
 machines, Docker containers and local Node or Python dev servers, side by side, started and
 stopped together.
