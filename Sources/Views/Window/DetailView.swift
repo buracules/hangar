@@ -9,13 +9,13 @@ struct DetailView: View {
     switch selection {
     case .profile(let id):
       if let profile = store.profiles.first(where: { $0.id == id }) {
-        LegacyProfileDetail(profile: profile, store: store, selection: $selection)
+        ProfileDetailView(profile: profile, store: store, selection: $selection)
       } else {
         gone("This profile was deleted.")
       }
     case .vm(let id):
       if let vm = store.vms.first(where: { $0.id == id }) {
-        LegacyVMDetail(vm: vm, store: store)
+        VMDetailView(vm: vm, store: store)
       } else {
         gone("This VM is no longer in UTM.")
       }

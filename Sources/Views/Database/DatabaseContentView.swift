@@ -63,11 +63,11 @@ struct DatabaseContentView: View {
         text: $model.whereClause,
         prompt: Text(verbatim: "WHERE role = 'admin'")
       )
-        .font(.mono(FontSize.smallMono))
-        .textFieldStyle(.roundedBorder)
-        .frame(minWidth: Constants.whereFieldMinimumWidth, maxWidth: Constants.whereFieldWidth)
-        .onSubmit { Task { await model.applyWhere() } }
-        .help("A SQL condition for the rows, as after WHERE")
+      .font(.mono(FontSize.smallMono))
+      .textFieldStyle(.roundedBorder)
+      .frame(minWidth: Constants.whereFieldMinimumWidth, maxWidth: Constants.whereFieldWidth)
+      .onSubmit { Task { await model.applyWhere() } }
+      .help("A SQL condition for the rows, as after WHERE")
       Button("Reload rows", systemImage: "arrow.clockwise") { Task { await model.loadRows() } }
         .labelStyle(.iconOnly)
         .buttonStyle(.accessoryBar)
@@ -93,9 +93,10 @@ struct DatabaseContentView: View {
 
   /// "9 columns · 3 indexes · 1 foreign key".
   private var structureSummary: String {
-    let foreignKeys = model.columns.flatMap(\.keys).filter {
-      if case .foreignKey = $0 { true } else { false }
-    }
+    let foreignKeys = model.columns.flatMap(\.keys)
+      .filter {
+        if case .foreignKey = $0 { true } else { false }
+      }
     return [
       counted(model.columns.count, "column"),
       counted(model.indexes.count, "index", plural: "indexes"),

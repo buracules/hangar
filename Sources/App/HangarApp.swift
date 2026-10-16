@@ -9,6 +9,8 @@ private enum Constants {
   /// Template images from the design: outline when idle, the door filled when anything runs.
   static let idleIcon = "MenuBarIcon"
   static let activeIcon = "MenuBarIconUp"
+  /// A profile member crashed or is unhealthy.
+  static let alertIcon = "MenuBarIconAlert"
 }
 
 /// The menu bar extra and the main window, sharing one store.
@@ -20,7 +22,7 @@ struct HangarApp: App {
 
   var body: some Scene {
     MenuBarExtra {
-      TrayPanel(store: store)
+      MenuBarPanel(store: store)
     } label: {
       MenuBarLabel(store: store)
     }
@@ -43,11 +45,16 @@ private struct MenuBarLabel: View {
   @Environment(\.openWindow) private var openWindow
 
   var body: some View {
-    Image(store.runningCount > 0 ? Constants.activeIcon : Constants.idleIcon)
+    Image(iconName)
       .task {
         if let appearance = LaunchOptions.appearance { NSApp.appearance = appearance }
         store.startPolling()
         if LaunchOptions.opensWindowAtLaunch { openWindow(id: Constants.windowID) }
       }
+  }
+
+  private var iconName: String {
+    if store.needsAttention { return Constants.alertIcon }
+    return store.runningCount > 0 ? Constants.activeIcon : Constants.idleIcon
   }
 }

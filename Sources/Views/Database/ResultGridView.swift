@@ -103,11 +103,12 @@ struct ResultGridView: NSViewRepresentable {
 
     private func width(of column: Int, header: NSAttributedString) -> CGFloat {
       let sample = result.rows.prefix(Constants.sizingSampleRows)
-      let widest = sample.map { row -> CGFloat in
-        let value = row.indices.contains(column) ? row[column] : nil
-        return ResultGridText.cell(value).text.size().width
-      }
-      .max() ?? 0
+      let widest =
+        sample.map { row -> CGFloat in
+          let value = row.indices.contains(column) ? row[column] : nil
+          return ResultGridText.cell(value).text.size().width
+        }
+        .max() ?? 0
       let natural = max(widest, header.size().width) + Constants.cellPadding
       return min(max(natural, Constants.minimumColumnWidth), Constants.maximumColumnWidth)
     }

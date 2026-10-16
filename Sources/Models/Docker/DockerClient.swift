@@ -23,6 +23,9 @@ private enum Constants {
 
 /// Talks to the Docker Engine API over its unix socket.
 struct DockerClient: Sendable {
+  /// Docker Desktop, which Hangar offers to open when the socket is down.
+  static let desktopBundleIdentifier = "com.docker.docker"
+
   let socketPath: String
 
   /// The first socket that exists: DOCKER_HOST, then the usual Docker Desktop, OrbStack and

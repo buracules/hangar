@@ -4,7 +4,8 @@ import Foundation
 /// keyword inside them stays uncoloured.
 enum SQLTokenizer {
   static func tokens(in text: String) -> [SQLToken] {
-    let pattern = #/
+    let pattern =
+      #/
       (--[^\n]*|\/\*[\s\S]*?\*\/)
       | ('(?:[^']|'')*'?)
       | (\b\d+(?:\.\d+)?\b)

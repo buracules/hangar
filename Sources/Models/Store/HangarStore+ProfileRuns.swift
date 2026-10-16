@@ -7,7 +7,7 @@ extension HangarStore {
   func startProfile(_ profile: Profile) {
     let (vms, containers) = membersToStart(profile)
     runProfile(profile, memberIDs: vms.map(\.id) + containers.map(\.id)) {
-      try await $0.start(vms: vms, containers: containers)
+      try await $0.start(vms: vms, containers: containers, cause: Cause.profile(profile.name))
     }
   }
 
@@ -15,20 +15,20 @@ extension HangarStore {
   func stopProfile(_ profile: Profile) {
     let (vms, containers) = membersToStop(profile)
     runProfile(profile, memberIDs: vms.map(\.id) + containers.map(\.id)) {
-      try await $0.stop(vms: vms, containers: containers)
+      try await $0.stop(vms: vms, containers: containers, cause: Cause.profile(profile.name))
     }
   }
 
   /// `startProfile`, awaited — for the CLI. Call `refresh()` first so membership is current.
   func startProfileNow(_ profile: Profile) async throws {
     let (vms, containers) = membersToStart(profile)
-    try await start(vms: vms, containers: containers)
+    try await start(vms: vms, containers: containers, cause: Cause.profile(profile.name))
   }
 
   /// `stopProfile`, awaited — for the CLI. Call `refresh()` first so membership is current.
   func stopProfileNow(_ profile: Profile) async throws {
     let (vms, containers) = membersToStop(profile)
-    try await stop(vms: vms, containers: containers)
+    try await stop(vms: vms, containers: containers, cause: Cause.profile(profile.name))
   }
 
   private func membersToStart(_ profile: Profile) -> ([VirtualMachine], [Container]) {
@@ -46,14 +46,14 @@ extension HangarStore {
 
   /// VMs first, so services in them are coming up while containers start. One member
   /// failing does not stop the others; all failures are reported together.
-  private func start(vms: [VirtualMachine], containers: [Container]) async throws {
+  private func start(vms: [VirtualMachine], containers: [Container], cause: String) async throws {
     var failures: [String] = []
     for vm in vms {
-      do { try await bootVM(vm) } catch { failures.append(describe(vm.name, error)) }
+      do { try await bootVM(vm, cause: cause) } catch { failures.append(describe(vm.name, error)) }
     }
     for container in containers {
       do {
-        try await requireDocker().start(container.id)
+        try await run(.start, on: container, cause: cause)
       } catch {
         failures.append(describe(container.name, error))
       }
@@ -62,28 +62,23 @@ extension HangarStore {
   }
 
   /// The reverse order: containers that depend on a VM go down before it does.
-  private func stop(vms: [VirtualMachine], containers: [Container]) async throws {
+  private func stop(vms: [VirtualMachine], containers: [Container], cause: String) async throws {
     var failures: [String] = []
     for container in containers {
       do {
-        try await requireDocker().stop(container.id)
+        try await run(.stop, on: container, cause: cause)
       } catch {
         failures.append(describe(container.name, error))
       }
     }
     for vm in vms {
       do {
-        try await utm?.stop(vm.id)
+        try await shutDown(vm, force: false, cause: cause)
       } catch {
         failures.append(describe(vm.name, error))
       }
     }
     if !failures.isEmpty { throw Failure.someMembersFailed(failures) }
-  }
-
-  private func requireDocker() throws -> DockerClient {
-    guard let docker else { throw Failure.dockerMissing }
-    return docker
   }
 
   private func describe(_ name: String, _ error: Error) -> String {

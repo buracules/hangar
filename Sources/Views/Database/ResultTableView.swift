@@ -7,7 +7,8 @@ final class ResultTableView: NSTableView {
 
   @objc func copy(_ sender: Any?) {
     guard let rowValues, !selectedRowIndexes.isEmpty else { return }
-    let text = selectedRowIndexes
+    let text =
+      selectedRowIndexes
       .map { rowValues($0).map { $0 ?? ResultGridText.null }.joined(separator: "\t") }
       .joined(separator: "\n")
     NSPasteboard.general.clearContents()

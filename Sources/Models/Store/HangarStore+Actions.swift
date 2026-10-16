@@ -13,13 +13,33 @@ private enum Constants {
 // MARK: - Actions
 
 extension HangarStore {
-  func startVM(_ vm: VirtualMachine) { perform(vm.id) { try await $0.bootVM(vm) } }
-
-  func stopVM(_ vm: VirtualMachine, force: Bool = false) {
-    perform(vm.id) { try await $0.utm?.stop(vm.id, force: force) }
+  func startVM(_ vm: VirtualMachine) {
+    perform(vm.id) { try await $0.bootVM(vm, cause: Cause.hangar) }
   }
 
-  func suspendVM(_ vm: VirtualMachine) { perform(vm.id) { try await $0.utm?.suspend(vm.id) } }
+  func stopVM(_ vm: VirtualMachine, force: Bool = false) {
+    perform(vm.id) { try await $0.shutDown(vm, force: force, cause: Cause.hangar) }
+  }
+
+  func suspendVM(_ vm: VirtualMachine) {
+    perform(vm.id) { try await $0.suspend(vm, cause: Cause.hangar) }
+  }
+
+  /// Asks the guest to shut down, or with `force` cuts the power, and records it.
+  func shutDown(_ vm: VirtualMachine, force: Bool, cause: String) async throws {
+    try await utm?.stop(vm.id, force: force)
+    activity.record(
+      vm.id,
+      outcome: force ? .error : .stopped,
+      title: force ? "Force stopped" : "Shut down",
+      cause: cause
+    )
+  }
+
+  func suspend(_ vm: VirtualMachine, cause: String) async throws {
+    try await utm?.suspend(vm.id)
+    activity.record(vm.id, outcome: .paused, title: "Suspended", cause: cause)
+  }
 
   /// Puts the VM's first IP address on the clipboard.
   func copyIP(_ vm: VirtualMachine) {
@@ -33,15 +53,32 @@ extension HangarStore {
   }
 
   func start(_ container: Container) {
-    perform(container.id) { try await $0.docker?.start(container.id) }
+    perform(container.id) { try await $0.run(.start, on: container, cause: Cause.hangar) }
   }
 
   func stop(_ container: Container) {
-    perform(container.id) { try await $0.docker?.stop(container.id) }
+    perform(container.id) { try await $0.run(.stop, on: container, cause: Cause.hangar) }
   }
 
   func restart(_ container: Container) {
-    perform(container.id) { try await $0.docker?.restart(container.id) }
+    perform(container.id) { try await $0.run(.restart, on: container, cause: Cause.hangar) }
+  }
+
+  /// Starts, stops or restarts a container and records it.
+  func run(_ action: ContainerAction, on container: Container, cause: String) async throws {
+    guard let docker else { throw Failure.dockerMissing }
+    switch action {
+    case .start: try await docker.start(container.id)
+    case .stop: try await docker.stop(container.id)
+    case .restart: try await docker.restart(container.id)
+    }
+    let (outcome, title): (ActivityEvent.Outcome, String) =
+      switch action {
+      case .start: (.running, "Started")
+      case .stop: (.stopped, "Stopped")
+      case .restart: (.running, "Restarted")
+      }
+    activity.record(container.id, outcome: outcome, title: title, cause: cause)
   }
 
   func startAll(_ group: ComposeGroup) {
@@ -52,17 +89,21 @@ extension HangarStore {
     for container in group.containers where container.isRunning { stop(container) }
   }
 
-  /// Starts a VM, launching UTM hidden first if it is closed.
-  func bootVM(_ vm: VirtualMachine) async throws {
+  /// Starts a VM, launching UTM hidden first if it is closed, and records why.
+  func bootVM(_ vm: VirtualMachine, cause: String) async throws {
     guard let utm else { throw UTMControl.Failure.notInstalled }
+    let title = vm.isPaused ? "Resumed" : "Started"
     guard try await launchUTMHidden() else {
       try await utm.start(vm.id)
+      activity.record(vm.id, outcome: .running, title: title, cause: cause)
       return
     }
+    activity.record(vm.id, outcome: .busy, title: "UTM opened hidden", detail: "it was closed")
     var lastError: Error?
     for _ in 0..<Constants.startAttempts {
       do {
         try await utm.start(vm.id)
+        activity.record(vm.id, outcome: .running, title: title, cause: cause)
         return
       } catch {
         lastError = error

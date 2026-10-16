@@ -35,6 +35,11 @@ final class HangarStore {
   /// Database tab state per container name, kept while the app runs.
   @ObservationIgnored var databaseModels: [String: DatabaseModel] = [:]
 
+  /// What happened to each machine, for the detail views' timelines.
+  let activity = ActivityLog()
+  /// Each machine's status at the last refresh, to notice changes. Empty until the first.
+  @ObservationIgnored var lastStatusKinds: [String: MachineStatus.Kind] = [:]
+
   let utm = UTMControl.detect()
   let docker = DockerClient.detect()
   private var pollTask: Task<Void, Never>?
@@ -81,6 +86,7 @@ final class HangarStore {
     async let vms: Void = refreshVMs()
     async let containers: Void = refreshContainers()
     _ = await (vms, containers)
+    noteStatusChanges()
   }
 
   /// Whether a UTM process exists right now.

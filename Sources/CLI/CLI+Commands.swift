@@ -16,10 +16,10 @@ extension CLI {
     guard let action = VMAction(rawValue: action) else { throw Failure.usage(usage) }
     guard let utm = store.utm else { throw UTMControl.Failure.notInstalled }
     switch action {
-    case .start: try await store.bootVM(vm)
-    case .stop: try await utm.stop(vm.id)
-    case .kill: try await utm.stop(vm.id, force: true)
-    case .suspend: try await utm.suspend(vm.id)
+    case .start: try await store.bootVM(vm, cause: HangarStore.Cause.cli)
+    case .stop: try await store.shutDown(vm, force: false, cause: HangarStore.Cause.cli)
+    case .kill: try await store.shutDown(vm, force: true, cause: HangarStore.Cause.cli)
+    case .suspend: try await store.suspend(vm, cause: HangarStore.Cause.cli)
     case .ip:
       guard store.isUTMRunning else { throw UTMControl.Failure.notRunning }
       print(try await utm.ipAddresses(vm.id).joined(separator: "\n"))
@@ -34,12 +34,7 @@ extension CLI {
     _ store: HangarStore
   ) async throws {
     guard let action = ContainerAction(rawValue: action) else { throw Failure.usage(usage) }
-    let docker = try requireDocker(store)
-    switch action {
-    case .start: try await docker.start(container.id)
-    case .stop: try await docker.stop(container.id)
-    case .restart: try await docker.restart(container.id)
-    }
+    try await store.run(action, on: container, cause: HangarStore.Cause.cli)
     print("\(action.rawValue) \(container.name)")
   }
 

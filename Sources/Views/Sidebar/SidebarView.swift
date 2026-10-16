@@ -140,10 +140,8 @@ struct SidebarView: View {
   }
 
   private func openDocker() {
-    store.openApp(bundleIdentifier: Self.dockerBundleIdentifier)
+    store.openApp(bundleIdentifier: DockerClient.desktopBundleIdentifier)
   }
-
-  private static let dockerBundleIdentifier = "com.docker.docker"
 
   private func expansion(of group: String) -> Binding<Bool> {
     Binding(

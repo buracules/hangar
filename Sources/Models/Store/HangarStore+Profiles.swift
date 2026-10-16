@@ -86,6 +86,15 @@ extension HangarStore {
     }
   }
 
+  /// Adds every container of a compose project that is not a member yet.
+  func add(_ group: ComposeGroup, to profile: Profile) {
+    updateProfile(profile) { profile in
+      for container in group.containers where !profile.containerNames.contains(container.name) {
+        profile.containerNames.append(container.name)
+      }
+    }
+  }
+
   /// The profile as stored now, after any edits made since it was looked up.
   func current(_ profile: Profile) -> Profile? {
     profiles.first { $0.id == profile.id }
