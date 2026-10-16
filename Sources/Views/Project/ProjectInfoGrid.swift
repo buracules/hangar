@@ -7,6 +7,8 @@ private enum Constants {
   static let separator = " · "
   /// Uptime shows minutes, so once a minute is enough.
   static let uptimeRefreshSeconds: TimeInterval = 60
+  /// The health value runs across the value, key and value columns to the right.
+  static let healthColumns = 3
 }
 
 /// Command, folder, port, URL, PID, uptime and health check, in the design's two-column form.
@@ -48,7 +50,7 @@ struct ProjectInfoGrid: View {
       }
       GridRow {
         InfoKey("Health check")
-        healthValue.gridCellColumns(3)
+        healthValue.gridCellColumns(Constants.healthColumns)
       }
     }
     .font(.ui(FontSize.body))

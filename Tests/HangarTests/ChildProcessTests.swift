@@ -15,7 +15,7 @@ struct ChildProcessTests {
     var out = ""
     var err = ""
     for await (isStderr, data) in process.output() {
-      let text = String(decoding: data, as: UTF8.self)
+      let text = String(bytes: data, encoding: .utf8) ?? ""
       if isStderr { err += text } else { out += text }
     }
     #expect(await process.waitForExit() == 3)
@@ -43,7 +43,7 @@ struct ChildProcessTests {
       environment: environment
     )
     var out = ""
-    for await (_, data) in process.output() { out += String(decoding: data, as: UTF8.self) }
+    for await (_, data) in process.output() { out += String(bytes: data, encoding: .utf8) ?? "" }
     _ = await process.waitForExit()
     #expect(out.contains("4321"))
   }
