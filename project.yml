@@ -6,9 +6,12 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    # Ad-hoc signing for local builds; Hangar is not sandboxed (Docker socket, Apple Events).
+    # Signed with the personal Apple Development certificate, not ad hoc: macOS keys the
+    # Automation (Apple Events → UTM) permission to the signature, and an ad-hoc signature
+    # changes with every build. Hangar is not sandboxed (Docker socket, Apple Events).
     CODE_SIGN_STYLE: Manual
-    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_IDENTITY: "Apple Development"
+    DEVELOPMENT_TEAM: Z29XX544J8
 targets:
   Hangar:
     type: application
