@@ -6,6 +6,9 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
+    # Ad-hoc signing for local builds; Hangar is not sandboxed (Docker socket, Apple Events).
+    CODE_SIGN_STYLE: Manual
+    CODE_SIGN_IDENTITY: "-"
 targets:
   Hangar:
     type: application
@@ -25,5 +28,15 @@ targets:
         MARKETING_VERSION: 0.1.0
         CURRENT_PROJECT_VERSION: 1
         ENABLE_APP_SANDBOX: NO
-        CODE_SIGN_STYLE: Manual
-        CODE_SIGN_IDENTITY: "-"
+    scheme:
+      testTargets: [HangarTests]
+  HangarTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources: [Tests]
+    dependencies:
+      - target: Hangar
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.burakustun.hangar.tests
+        GENERATE_INFOPLIST_FILE: YES
