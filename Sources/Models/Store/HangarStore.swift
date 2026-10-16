@@ -32,6 +32,9 @@ final class HangarStore {
     }
   }
 
+  /// Database tab state per container name, kept while the app runs.
+  @ObservationIgnored var databaseModels: [String: DatabaseModel] = [:]
+
   let utm = UTMControl.detect()
   let docker = DockerClient.detect()
   private var pollTask: Task<Void, Never>?

@@ -1,218 +1,12 @@
 import SwiftUI
 
-/// What the sidebar can select. Containers by name: a recreated container keeps its name,
-/// not its id, so the selection survives `docker compose up`.
-enum SidebarItem: Hashable {
-  case profile(UUID)
-  case vm(String)
-  case container(String)
-}
-
-struct MainWindow: View {
-  let store: HangarStore
-  @State private var selection: SidebarItem?
-
-  var body: some View {
-    NavigationSplitView {
-      Sidebar(store: store, selection: $selection)
-        .navigationSplitViewColumnWidth(min: 220, ideal: 260, max: 360)
-    } detail: {
-      detail
-    }
-    .toolbar {
-      ToolbarItem {
-        Button {
-          Task { await store.refresh() }
-        } label: {
-          Label("Refresh", systemImage: "arrow.clockwise")
-        }
-        .keyboardShortcut("r")
-      }
-    }
-    .safeAreaInset(edge: .bottom) {
-      if let error = store.lastError {
-        HStack(alignment: .top) {
-          Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
-          Text(error).textSelection(.enabled)
-          Spacer()
-          Button {
-            store.lastError = nil
-          } label: {
-            Image(systemName: "xmark")
-          }
-          .buttonStyle(.borderless)
-        }
-        .font(.callout)
-        .padding(10)
-        .background(.bar)
-      }
-    }
-    .frame(minWidth: 860, minHeight: 540)
-    // A Dock icon and ⌘-Tab only while the window is open; closing it leaves the menu bar app.
-    .onAppear {
-      NSApp.setActivationPolicy(.regular)
-      NSApp.activate()
-    }
-    .onDisappear { NSApp.setActivationPolicy(.accessory) }
-  }
-
-  @ViewBuilder
-  private var detail: some View {
-    switch selection {
-    case .profile(let id):
-      if let profile = store.profiles.first(where: { $0.id == id }) {
-        ProfileDetail(profile: profile, store: store, selection: $selection)
-      } else {
-        Unavailable(text: "This profile was deleted.")
-      }
-    case .vm(let id):
-      if let vm = store.vms.first(where: { $0.id == id }) {
-        VMDetail(vm: vm, store: store)
-      } else {
-        Unavailable(text: "This VM is no longer in UTM.")
-      }
-    case .container(let name):
-      if let container = store.containers.first(where: { $0.name == name }) {
-        ContainerDetail(container: container, store: store)
-      } else {
-        Unavailable(text: "This container no longer exists.")
-      }
-    case nil:
-      ContentUnavailableView(
-        "Nothing selected",
-        systemImage: "square.stack.3d.up",
-        description: Text("Pick a profile, VM or container from the sidebar.")
-      )
-    }
-  }
-}
-
-private struct Unavailable: View {
-  let text: String
-  var body: some View {
-    ContentUnavailableView(
-      "Gone",
-      systemImage: "questionmark.square.dashed",
-      description: Text(text)
-    )
-  }
-}
-
-// MARK: - Sidebar
-
-private struct Sidebar: View {
-  let store: HangarStore
-  @Binding var selection: SidebarItem?
-  @State private var collapsed: Set<String> = []
-
-  var body: some View {
-    List(selection: $selection) {
-      Section {
-        ForEach(store.profiles) { profile in
-          let members = store.members(of: profile)
-          Row(
-            color: members.statusColor,
-            title: profile.name,
-            detail: "\(members.runningCount)/\(members.total)"
-          )
-          .tag(SidebarItem.profile(profile.id))
-        }
-      } header: {
-        HStack {
-          Text("Profiles")
-          Spacer()
-          Button {
-            selection = .profile(store.createEmptyProfile().id)
-          } label: {
-            Image(systemName: "plus")
-          }
-          .buttonStyle(.borderless)
-          .help("New profile")
-        }
-      }
-
-      Section(store.isUTMRunning ? "Virtual Machines" : "Virtual Machines · UTM closed") {
-        if case .offline(let reason) = store.utmState { Text(reason).foregroundStyle(.secondary) }
-        if case .missing = store.utmState {
-          Text("UTM is not installed").foregroundStyle(.secondary)
-        }
-        ForEach(store.vms) { vm in
-          Row(color: vm.statusColor, title: vm.name, detail: vm.isRunning ? nil : vm.status)
-            .tag(SidebarItem.vm(vm.id))
-        }
-      }
-
-      Section("Containers") {
-        if case .offline(let reason) = store.dockerState {
-          Text(reason).foregroundStyle(.secondary)
-        }
-        if case .missing = store.dockerState {
-          Text("No Docker socket found").foregroundStyle(.secondary)
-        }
-        ForEach(store.composeGroups) { group in
-          DisclosureGroup(isExpanded: expansion(group.id)) {
-            ForEach(group.containers) { container in
-              containerRow(container)
-            }
-          } label: {
-            Row(
-              color: group.runningCount > 0 ? .green : .secondary,
-              title: group.id,
-              detail: "\(group.runningCount)/\(group.containers.count)",
-              systemImage: "square.stack.3d.up"
-            )
-          }
-        }
-        ForEach(store.standaloneContainers) { container in
-          containerRow(container)
-        }
-      }
-    }
-    .listStyle(.sidebar)
-  }
-
-  private func containerRow(_ container: Container) -> some View {
-    Row(
-      color: container.statusColor,
-      title: container.displayName,
-      detail: container.isRunning ? nil : container.state
-    )
-    .tag(SidebarItem.container(container.name))
-  }
-
-  private func expansion(_ id: String) -> Binding<Bool> {
-    Binding(
-      get: { !collapsed.contains(id) },
-      set: { if $0 { collapsed.remove(id) } else { collapsed.insert(id) } }
-    )
-  }
-
-  private struct Row: View {
-    let color: Color
-    let title: String
-    var detail: String?
-    var systemImage: String?
-
-    var body: some View {
-      HStack(spacing: 8) {
-        if let systemImage {
-          Image(systemName: systemImage).foregroundStyle(.secondary)
-        } else {
-          StatusDot(color: color)
-        }
-        Text(title).lineLimit(1)
-        Spacer()
-        if let detail {
-          Text(detail).font(.caption).foregroundStyle(.secondary)
-        }
-      }
-    }
-  }
-}
+// Temporary: the VM and profile details as they were before the design pass. Each moves to
+// its own design-built view in a later slice, and this file goes away.
+// swiftlint:disable no_magic_numbers line_length
 
 // MARK: - Shared detail chrome
 
-private struct DetailHeader<Actions: View>: View {
+private struct LegacyDetailHeader<Actions: View>: View {
   let systemImage: String
   let title: String
   let subtitle: String
@@ -239,7 +33,7 @@ private struct DetailHeader<Actions: View>: View {
   }
 }
 
-private struct InfoRow<Value: View>: View {
+private struct LegacyInfoRow<Value: View>: View {
   let label: String
   @ViewBuilder let value: Value
 
@@ -258,14 +52,14 @@ private struct InfoRow<Value: View>: View {
 
 // MARK: - VM
 
-private struct VMDetail: View {
+struct LegacyVMDetail: View {
   let vm: VirtualMachine
   let store: HangarStore
   @State private var addresses: Result<[String], Error>?
 
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
-      DetailHeader(
+      LegacyDetailHeader(
         systemImage: "desktopcomputer",
         title: vm.name,
         subtitle: vm.status,
@@ -284,9 +78,9 @@ private struct VMDetail: View {
       }
       Divider()
       Grid(alignment: .leading, horizontalSpacing: 14, verticalSpacing: 10) {
-        InfoRow("UUID") { Text(vm.id).font(.body.monospaced()).textSelection(.enabled) }
-        InfoRow("IP address") { addressView }
-        InfoRow("Profiles") {
+        LegacyInfoRow("UUID") { Text(vm.id).font(.body.monospaced()).textSelection(.enabled) }
+        LegacyInfoRow("IP address") { addressView }
+        LegacyInfoRow("Profiles") {
           MembershipChips(store: store, contains: { $0.vmIDs.contains(vm.id) }) {
             store.toggle(vm, in: $0)
           }
@@ -335,64 +129,6 @@ private struct VMDetail: View {
   }
 }
 
-// MARK: - Container
-
-private struct ContainerDetail: View {
-  let container: Container
-  let store: HangarStore
-
-  var body: some View {
-    VStack(alignment: .leading, spacing: 0) {
-      DetailHeader(
-        systemImage: "shippingbox",
-        title: container.displayName,
-        subtitle: container.status,
-        color: container.statusColor
-      ) {
-        if store.busy.contains(container.id) {
-          ProgressView().controlSize(.small)
-        } else if container.isRunning {
-          Button("Restart") { store.restart(container) }
-          Button("Stop") { store.stop(container) }
-        } else {
-          Button("Start") { store.start(container) }
-            .keyboardShortcut(.defaultAction)
-        }
-      }
-      Divider()
-      Grid(alignment: .leading, horizontalSpacing: 14, verticalSpacing: 8) {
-        InfoRow("Name") { Text(container.name).textSelection(.enabled) }
-        InfoRow("Image") { Text(container.image).textSelection(.enabled) }
-        InfoRow("ID") {
-          Text(container.id.prefix(12)).font(.body.monospaced()).textSelection(.enabled)
-        }
-        if let project = container.composeProject {
-          InfoRow("Compose") { Text("\(project) · \(container.composeService ?? "?")") }
-        }
-        if !container.publishedPorts.isEmpty {
-          InfoRow("Ports") {
-            HStack {
-              ForEach(container.publishedPorts, id: \.self) { port in
-                Button("localhost:\(String(port))") { store.openPort(port) }
-                  .buttonStyle(.link)
-                  .disabled(!container.isRunning)
-              }
-            }
-          }
-        }
-        InfoRow("Profiles") {
-          MembershipChips(store: store, contains: { $0.containerNames.contains(container.name) }) {
-            store.toggle(container, in: $0)
-          }
-        }
-      }
-      .padding(16)
-      Divider()
-      ContainerLogs(container: container, docker: store.docker)
-    }
-  }
-}
-
 /// The profiles something belongs to, as chips; the menu adds or removes it from any.
 private struct MembershipChips: View {
   let store: HangarStore
@@ -422,7 +158,7 @@ private struct MembershipChips: View {
 
 // MARK: - Profile
 
-private struct ProfileDetail: View {
+struct LegacyProfileDetail: View {
   let profile: Profile
   let store: HangarStore
   @Binding var selection: SidebarItem?
@@ -559,3 +295,5 @@ private struct ProfileDetail: View {
     }
   }
 }
+
+// swiftlint:enable no_magic_numbers line_length
