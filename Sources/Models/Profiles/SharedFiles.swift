@@ -6,5 +6,6 @@ import Foundation
 enum SharedFiles {
   static let profiles = SharedFile<[Profile]>(name: "profiles.json")
   static let knownVMs = SharedFile<[KnownVM]>(name: "known-vms.json")
+  static let projects = SharedFile<[Project]>(name: "projects.json")
   static let activity = SharedFile<[String: [ActivityEvent]]>(name: "activity.json")
 }

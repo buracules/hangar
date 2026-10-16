@@ -25,11 +25,17 @@ struct DetailView: View {
       } else {
         gone("This container no longer exists.")
       }
+    case .project(let id):
+      if let project = store.projects.first(where: { $0.id == id }) {
+        ProjectDetailView(project: project, store: store, selection: $selection)
+      } else {
+        gone("This project was removed.")
+      }
     case nil:
       ContentUnavailableView(
         "Nothing selected",
         systemImage: "square.stack.3d.up",
-        description: Text("Pick a profile, VM or container from the sidebar.")
+        description: Text("Pick a profile, project, VM or container from the sidebar.")
       )
     }
   }

@@ -6,4 +6,5 @@ enum SidebarItem: Hashable {
   case profile(UUID)
   case vm(String)
   case container(String)
+  case project(UUID)
 }

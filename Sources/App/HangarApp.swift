@@ -49,6 +49,14 @@ private struct MenuBarLabel: View {
       .task {
         if let appearance = LaunchOptions.appearance { NSApp.appearance = appearance }
         store.startPolling()
+        // Projects are Hangar's children; take them down rather than orphan them.
+        NotificationCenter.default.addObserver(
+          forName: NSApplication.willTerminateNotification,
+          object: nil,
+          queue: .main
+        ) { _ in
+          MainActor.assumeIsolated { store.terminateProjects() }
+        }
         if LaunchOptions.opensWindowAtLaunch { openWindow(id: Constants.windowID) }
       }
   }

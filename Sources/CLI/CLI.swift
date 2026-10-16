@@ -2,7 +2,8 @@ import Foundation
 
 private enum Constants {
   static let commands: Set<String> = [
-    "status", "up", "down", "profile", "vm", "ps", "start", "stop", "restart", "logs", "sql",
+    "status", "up", "down", "profile", "project", "vm", "ps", "start", "stop", "restart", "logs",
+    "sql",
     "help", "--help", "-h",
   ]
   static let successExitCode: Int32 = 0
@@ -31,6 +32,10 @@ enum CLI {
       profile remove <profile> <m>…  remove members, also ones that no longer exist
       profile start|stop <name>      same as up|down
       profile delete <name>          delete a profile (its machines are left alone)
+      project list                   list project folders and how each would run
+      project add <folder>           add a Node or Python project folder
+      project remove <name>          forget a project (its files are left alone)
+                                     (start and stop projects from the app)
       vm list                        list VMs
       vm start|stop|suspend <vm>     control a VM (name or UUID); stop asks the guest OS
       vm kill <vm>                   cut a VM's power
@@ -40,7 +45,7 @@ enum CLI {
       logs [-f] <container>          print a container's last 200 lines; -f keeps following
       sql <container> [-d db] <sql>  run SQL in a postgres container (credentials from its env)
 
-    --json   machine-readable output for status, ps, vm list and every profile command
+    --json   machine-readable output for status, ps, vm list, project and profile commands
     """
 
   /// Whether the arguments are a CLI command. Anything else — including the `-NS…` flags
@@ -84,6 +89,8 @@ enum CLI {
       list(args.first ?? "", store, json: json)
     case ("profile", _):
       try await profile(args, store, json: json)
+    case ("project", _):
+      try project(args, store, json: json)
     case ("vm", let action?):
       try await vm(action, try findVM(args, store), store)
     case ("logs", _):

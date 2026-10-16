@@ -11,6 +11,7 @@ private enum Constants {
   static let profilePrefix = "profile:"
   static let vmPrefix = "vm:"
   static let containerPrefix = "container:"
+  static let projectPrefix = "project:"
 }
 
 /// Developer switches for screenshots and UI work, read from launch arguments, e.g.
@@ -22,8 +23,8 @@ enum LaunchOptions {
     UserDefaults.standard.bool(forKey: Constants.openWindowKey)
   }
 
-  /// The sidebar item to select at launch: `profile:<name>`, `vm:<name>` or
-  /// `container:<name>`.
+  /// The sidebar item to select at launch: `profile:<name>`, `vm:<name>`,
+  /// `container:<name>` or `project:<name>`.
   static var selection: (kind: SelectionKind, name: String)? {
     guard let value = UserDefaults.standard.string(forKey: Constants.selectKey) else {
       return nil
@@ -32,6 +33,7 @@ enum LaunchOptions {
       (Constants.profilePrefix, .profile),
       (Constants.vmPrefix, .vm),
       (Constants.containerPrefix, .container),
+      (Constants.projectPrefix, .project),
     ]
     for (prefix, kind) in prefixes where value.hasPrefix(prefix) {
       return (kind, String(value.dropFirst(prefix.count)))
@@ -67,5 +69,6 @@ enum LaunchOptions {
     case profile
     case vm
     case container
+    case project
   }
 }

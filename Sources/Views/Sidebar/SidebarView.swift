@@ -4,7 +4,7 @@ private enum Constants {
   static let emptyLineSpacing: CGFloat = 2
 }
 
-/// Profiles, VMs and containers. Compose projects fold their containers away; search
+/// Profiles, VMs, containers and projects. Compose projects fold their containers away; search
 /// narrows every section to matching names.
 struct SidebarView: View {
   let store: HangarStore
@@ -18,6 +18,7 @@ struct SidebarView: View {
       profilesSection
       vmsSection
       containersSection
+      projectsSection
     }
     .listStyle(.sidebar)
   }
@@ -58,6 +59,57 @@ struct SidebarView: View {
 
   private func newProfile() {
     selection = .profile(store.createEmptyProfile().id)
+  }
+
+  // MARK: Projects
+
+  private var projectsSection: some View {
+    Section {
+      if store.projects.isEmpty {
+        emptyState(
+          "Run Node and Python dev servers here.",
+          action: "Add Project Folder…",
+          perform: addProject
+        )
+      }
+      ForEach(store.projects) { project in
+        let name = store.spec(for: project).name
+        if matches(name) { projectRow(project, name: name) }
+      }
+    } header: {
+      HStack {
+        Text("Projects")
+        Spacer()
+        Button(action: addProject) {
+          Image(systemName: "plus")
+        }
+        .buttonStyle(.borderless)
+        .help("Add a project folder")
+        .accessibilityLabel("Add project")
+      }
+    }
+  }
+
+  private func projectRow(_ project: Project, name: String) -> some View {
+    let status = store.status(of: project)
+    let run = store.projectRuns[project.id]
+    let trailing: String
+    switch status.kind {
+    case .running: trailing = run?.port.map { ":\($0)" } ?? ""
+    case .stopped: trailing = status.word == "Stopped" ? "" : status.word
+    default: trailing = status.word
+    }
+    return SidebarRow(
+      leading: .status(status.kind),
+      name: name,
+      trailing: trailing,
+      isTrailingMono: status.kind == .running
+    )
+    .tag(SidebarItem.project(project.id))
+  }
+
+  private func addProject() {
+    if let project = store.chooseProjectFolder() { selection = .project(project.id) }
   }
 
   // MARK: VMs

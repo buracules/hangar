@@ -35,6 +35,10 @@ enum CLIJSON {
     encode(store.containers.map(ContainerOutput.init))
   }
 
+  static func projects(_ projects: [Project], _ store: HangarStore) -> String {
+    encode(projects.map { ProjectOutput($0, store) })
+  }
+
   private static func encode(_ value: some Encodable) -> String {
     let encoder = JSONEncoder()
     encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]

@@ -103,6 +103,8 @@ struct MainWindowView: View {
     case .profile(let id): store.profiles.first { $0.id == id }?.name ?? Constants.appName
     case .vm(let id): store.vms.first { $0.id == id }?.name ?? Constants.appName
     case .container(let name): name
+    case .project(let id):
+      store.projects.first { $0.id == id }.map { store.spec(for: $0).name } ?? Constants.appName
     case nil: Constants.appName
     }
   }
@@ -118,6 +120,9 @@ struct MainWindowView: View {
     case .container(let name):
       let project = store.containers.first { $0.name == name }?.composeProject
       return project.map { "Container · \($0)" } ?? "Container"
+    case .project(let id):
+      return store.projects.first { $0.id == id }.map { "Project · \(store.spec(for: $0).kind)" }
+        ?? ""
     case nil:
       return ""
     }
@@ -136,6 +141,10 @@ struct MainWindowView: View {
       selection = store.vms.first { $0.name == name || $0.id == name }.map { .vm($0.id) }
     case .container:
       selection = store.containers.first { $0.name == name }.map { .container($0.name) }
+    case .project:
+      selection = store.projects
+        .first { $0.folderName == name || store.spec(for: $0).name == name }
+        .map { .project($0.id) }
     }
   }
 }

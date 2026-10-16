@@ -10,6 +10,12 @@ struct LogDecoder {
   private var partial: [UInt8: Data] = [:]
   private var parsers: [UInt8: ANSIParser] = [:]
 
+  /// `isRaw` skips framing detection, for output that never comes from Docker — a project's
+  /// stdout, whose first bytes could otherwise look like a frame header.
+  init(isRaw: Bool = false) {
+    isFramed = isRaw ? false : nil
+  }
+
   /// The complete lines `data` finishes; a trailing partial line waits for the next chunk.
   mutating func feed(_ data: Data) -> [LogLine] {
     pending.append(data)

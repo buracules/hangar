@@ -32,6 +32,20 @@ final class HangarStore {
     }
   }
 
+  /// Project folders added to Hangar.
+  var projects: [Project] = SharedFiles.projects.load() ?? [] {
+    didSet {
+      do {
+        try SharedFiles.projects.save(projects)
+      } catch {
+        lastError = error.localizedDescription
+      }
+    }
+  }
+  /// Live runs by project id, made on first start. Runs are this process's children, so the
+  /// CLI never sees the app's runs.
+  var projectRuns: [UUID: ProjectRun] = [:]
+
   /// Database tab state per container name, kept while the app runs.
   @ObservationIgnored var databaseModels: [String: DatabaseModel] = [:]
 
@@ -83,6 +97,7 @@ final class HangarStore {
   /// Re-reads VMs, containers and profiles.
   func refresh() async {
     reloadProfiles()
+    reloadProjects()
     async let vms: Void = refreshVMs()
     async let containers: Void = refreshContainers()
     _ = await (vms, containers)
