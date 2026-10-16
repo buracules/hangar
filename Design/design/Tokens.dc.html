@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hangar — tokens</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./hangar.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="hg" style="width: 1280px; height: 1560px; box-sizing: border-box; padding: 48px; background: var(--bg-content); display: flex; flex-direction: column; gap: 24px">
+  <div>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700">Tokens</h1>
+    <p class="dim" style="margin: 4px 0 0">Names are 1:1 with <span class="mono">hangar.css</span> custom properties and a Swift <span class="mono">enum HangarTokens</span>. 1 px here = 1 pt on macOS.</p>
+  </div>
+  <div style="display: flex; gap: 40px; align-items: flex-start">
+    <div style="flex: 0 0 470px; display: flex; flex-direction: column; gap: 28px">
+
+      <section>
+        <div class="sec-h" style="margin-bottom: 6px">Spacing — 8 pt grid</div>
+        <sc-for list="{{spacing}}" as="r" hint-placeholder-count="7">
+          <div style="display: grid; grid-template-columns: 90px 40px 60px minmax(0, 1fr); gap: 10px; align-items: center; height: 26px; border-bottom: 0.5px solid var(--sep); font-size: 12px">
+            <span class="mono" style="font-size: 11px">{{r.name}}</span><span style="font-variant-numeric: tabular-nums">{{r.v}}</span><span style="display: block; height: 8px; border-radius: 2px; background: var(--accent); width: {{r.w}}"></span><span class="dim">{{r.use}}</span>
+          </div>
+        </sc-for>
+      </section>
+
+      <section>
+        <div class="sec-h" style="margin-bottom: 6px">Radius</div>
+        <sc-for list="{{radius}}" as="r" hint-placeholder-count="6">
+          <div style="display: grid; grid-template-columns: 90px 40px 30px minmax(0, 1fr); gap: 10px; align-items: center; height: 30px; border-bottom: 0.5px solid var(--sep); font-size: 12px">
+            <span class="mono" style="font-size: 11px">{{r.name}}</span><span>{{r.v}}</span><span style="display: block; width: 22px; height: 22px; box-shadow: inset 0 0 0 1.5px var(--accent-text); border-radius: {{r.v}}"></span><span class="dim">{{r.use}}</span>
+          </div>
+        </sc-for>
+      </section>
+
+      <section>
+        <div class="sec-h" style="margin-bottom: 6px">Type — SF Pro / SF Mono</div>
+        <sc-for list="{{type}}" as="r" hint-placeholder-count="9">
+          <div style="display: grid; grid-template-columns: 90px 64px 120px minmax(0, 1fr); gap: 10px; align-items: center; min-height: 28px; border-bottom: 0.5px solid var(--sep); font-size: 12px">
+            <span class="mono" style="font-size: 11px">{{r.name}}</span><span style="font-variant-numeric: tabular-nums">{{r.v}}</span><span class="mono dim" style="font-size: 10px">{{r.swift}}</span><span style="font-size: {{r.px}}; font-weight: {{r.w}}; font-family: {{r.ff}}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.use}}</span>
+          </div>
+        </sc-for>
+      </section>
+
+      <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+        <div>
+          <div class="sec-h" style="margin-bottom: 6px">Opacity</div>
+          <sc-for list="{{opacity}}" as="r" hint-placeholder-count="5">
+            <div style="display: grid; grid-template-columns: 96px 36px minmax(0, 1fr); gap: 8px; align-items: center; height: 26px; border-bottom: 0.5px solid var(--sep); font-size: 12px"><span class="mono" style="font-size: 11px">{{r.name}}</span><span>{{r.v}}</span><span class="dim" style="font-size: 11px">{{r.use}}</span></div>
+          </sc-for>
+        </div>
+        <div>
+          <div class="sec-h" style="margin-bottom: 6px">Motion</div>
+          <sc-for list="{{motion}}" as="r" hint-placeholder-count="5">
+            <div style="display: grid; grid-template-columns: 76px 52px minmax(0, 1fr); gap: 8px; align-items: center; height: 26px; border-bottom: 0.5px solid var(--sep); font-size: 12px"><span class="mono" style="font-size: 11px">{{r.name}}</span><span style="font-size: 11px">{{r.v}}</span><span class="dim" style="font-size: 11px">{{r.use}}</span></div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section>
+        <div class="sec-h" style="margin-bottom: 6px">Sizes</div>
+        <sc-for list="{{sizes}}" as="r" hint-placeholder-count="7">
+          <div style="display: grid; grid-template-columns: 110px 50px minmax(0, 1fr); gap: 10px; align-items: center; height: 26px; border-bottom: 0.5px solid var(--sep); font-size: 12px"><span class="mono" style="font-size: 11px">{{r.name}}</span><span>{{r.v}}</span><span class="dim">{{r.use}}</span></div>
+        </sc-for>
+      </section>
+    </div>
+
+    <section style="flex: 1; min-width: 0">
+      <div class="sec-h" style="margin-bottom: 6px">Color — per theme</div>
+      <div style="display: grid; grid-template-columns: 110px 168px 168px minmax(0, 1fr); gap: 10px; height: 24px; align-items: center; font-size: 11px; font-weight: 600; color: var(--label-2); border-bottom: 0.5px solid var(--sep-strong)"><span>Token</span><span>Light</span><span>Dark</span><span>Use</span></div>
+      <sc-for list="{{colors}}" as="r" hint-placeholder-count="40">
+        <sc-if value="{{r.isGroup}}" hint-placeholder-val="{{ false }}"><div class="sec-h" style="padding: 12px 0 4px">{{r.name}}</div></sc-if>
+        <sc-if value="{{r.isRow}}" hint-placeholder-val="{{ true }}">
+          <div style="display: grid; grid-template-columns: 110px 168px 168px minmax(0, 1fr); gap: 10px; align-items: center; height: 24px; border-bottom: 0.5px solid var(--sep); font-size: 11px">
+            <span class="mono" style="font-size: 11px">{{r.name}}</span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="display: inline-flex; padding: 2px; border-radius: 4px; background: #FFFFFF; box-shadow: 0 0 0 0.5px rgba(0,0,0,.2)"><span style="display: block; width: 14px; height: 14px; border-radius: 3px; background: {{r.l}}"></span></span><span class="mono" style="font-size: 10px">{{r.l}}</span></span>
+            <span style="display: flex; align-items: center; gap: 6px"><span style="display: inline-flex; padding: 2px; border-radius: 4px; background: #1E1E1E; box-shadow: 0 0 0 0.5px rgba(0,0,0,.2)"><span style="display: block; width: 14px; height: 14px; border-radius: 3px; background: {{r.d}}"></span></span><span class="mono" style="font-size: 10px">{{r.d}}</span></span>
+            <span class="dim" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.use}}</span>
+          </div>
+        </sc-if>
+      </sc-for>
+      <p class="dim" style="margin: 14px 0 0; font-size: 11px; line-height: 16px">Light status colors are the macOS increased-contrast variants, so glyph and word pass 4.5:1 on white. <span class="mono">accent</span> is a stand-in — ship <span class="mono">Color.accentColor</span> so the user’s system accent wins. Surfaces map to system materials (<span class="mono">.sidebar</span>, <span class="mono">.popover</span>, <span class="mono">.windowBackground</span>); hexes are the flattened look over a neutral desktop.</p>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1560}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sp = (name, v, use) => ({ name, v: v + ' pt', w: v + 'px', use });
+    const spacing = [sp('sp-0-5', 4, 'icon–label gap, chip gaps'), sp('sp-1', 8, 'row padding, control gaps'), sp('sp-1-5', 12, 'header gaps, card padding'), sp('sp-2', 16, 'section padding, toolbar end'), sp('sp-3', 24, 'detail gutters'), sp('sp-4', 32, 'large empty-state spacing'), sp('sp-6', 48, 'sheet margins')];
+    const rd = (name, v, use) => ({ name, v, use });
+    const radius = [rd('r-xs', '4px', 'port chips, key tags, code'), rd('r-sm', '6px', 'buttons, fields, sidebar rows'), rd('r-md', '8px', 'cards, menus, detail icon'), rd('r-window', '10px', 'window (system)'), rd('r-lg', '12px', 'menu bar panel, alerts'), rd('r-capsule', '999px', 'profile chips, Jump pill')];
+    const ui = 'var(--font-ui)', mono = 'var(--font-mono)';
+    const ty = (name, v, swift, px, w, ff, use) => ({ name, v, swift, px, w, ff, use });
+    const type = [
+      ty('fs-title1', '22/28 bold', '.title', '22px', 700, ui, 'Sheet titles'),
+      ty('fs-title2', '17/22 semi', '.title2', '17px', 600, ui, 'Detail name'),
+      ty('fs-title3', '15/18 semi', '.title3', '15px', 600, ui, 'Toolbar & panel title'),
+      ty('fs-body', '13/16 reg', '.body', '13px', 400, ui, 'Rows, buttons, menus'),
+      ty('fs-callout', '12/16 reg', '.callout', '12px', 400, ui, 'Info values, status line'),
+      ty('fs-sub', '11/14 semi', '.subheadline', '11px', 600, ui, 'Section headers, counts'),
+      ty('fs-caption', '10/13 semi', '.caption2', '10px', 600, ui, 'Tags'),
+      ty('fs-mono', '12/18 reg', '.body.monospaced', '12px', 400, mono, 'Logs, SQL, grid 18:10:54'),
+      ty('fs-mono-sm', '11/16 reg', '.callout.mono', '11px', 400, mono, 'Port chips :5433, IDs')
+    ];
+    const op = (name, v, use) => ({ name, v, use });
+    const opacity = [op('op-label-2', '.62', 'secondary text'), op('op-label-3', '.45', 'tertiary, NULL, ts'), op('op-disabled', '.30', 'disabled controls'), op('op-hover', '.05', 'row hover fill'), op('op-pressed', '.10', 'pressed fill')];
+    const motion = [op('dur-fast', '120 ms', 'hover, press'), op('dur-base', '200 ms', 'disclosure, tabs, pill'), op('dur-slow', '320 ms', 'sheets, panel'), op('dur-spin', '1200 ms', 'busy spinner, linear'), op('ease', '.snappy', 'cubic-bezier(.2,.8,.2,1)')];
+    const sizes = [op('h-row', '28 pt', 'sidebar & list rows'), op('h-row-2', '36 pt', 'two-line rows, members'), op('h-control', '24 pt', 'buttons, popups'), op('h-control-sm', '20 pt', 'small buttons, segments'), op('h-toolbar', '52 pt', 'unified toolbar'), op('w-sidebar', '232 pt', 'sidebar (min 200, max 320)'), op('w-popover', '360 pt', 'menu bar panel')];
+    const g = (name) => ({ isGroup: true, isRow: false, name });
+    const c = (name, l, d, use) => ({ isGroup: false, isRow: true, name, l, d, use });
+    const colors = [
+      g('Surfaces'),
+      c('bg-content', '#FFFFFF', '#1E1E1E', 'detail area, toolbar'),
+      c('bg-sidebar', '#EDEDEF', '#29292B', 'sidebar (.sidebar material)'),
+      c('bg-pane', '#F6F6F7', '#232325', 'table list, footers, events'),
+      c('bg-header', '#F3F3F4', '#2A2A2C', 'grid header'),
+      c('bg-editor', '#FAFAFB', '#1A1A1B', 'SQL editor'),
+      c('bg-popover', '#F2F2F4', '#2C2C2E', 'menu bar panel, alerts'),
+      c('bg-card', '#FFFFFF', '#363638', 'profile cards, grouped lists'),
+      c('bg-menu', '#F6F6F6', '#2F2F31', 'context & pop-up menus'),
+      g('Text & lines'),
+      c('label', 'rgba(0,0,0,.88)', 'rgba(255,255,255,.88)', 'primary text'),
+      c('label-2', 'rgba(0,0,0,.62)', 'rgba(255,255,255,.62)', 'secondary text'),
+      c('label-3', 'rgba(0,0,0,.45)', 'rgba(255,255,255,.45)', 'NULL, section headers, DEBUG'),
+      c('label-4', 'rgba(0,0,0,.22)', 'rgba(255,255,255,.22)', 'line numbers, disabled'),
+      c('sep', 'rgba(0,0,0,.10)', 'rgba(255,255,255,.10)', '0.5 pt hairlines'),
+      c('sep-strong', 'rgba(0,0,0,.16)', 'rgba(255,255,255,.16)', 'grid header rule, menus'),
+      g('Fills & controls'),
+      c('fill-1', 'rgba(0,0,0,.04)', 'rgba(255,255,255,.05)', 'hover, quiet notes'),
+      c('fill-2', 'rgba(0,0,0,.06)', 'rgba(255,255,255,.08)', 'chips, segment track'),
+      c('fill-sel', 'rgba(0,0,0,.09)', 'rgba(255,255,255,.12)', 'selected sidebar row'),
+      c('zebra', 'rgba(0,0,0,.025)', 'rgba(255,255,255,.03)', 'alternate grid rows'),
+      c('control-bg', '#FFFFFF', '#3A3A3C', 'bordered buttons'),
+      c('control-on', '#FFFFFF', '#5B5B5F', 'selected segment'),
+      c('accent', '#007AFF', '#0A84FF', 'primary button, focus (system)'),
+      c('accent-text', '#0064D1', '#4DA3FF', 'links, chip text'),
+      c('accent-soft', 'rgba(0,122,255,.10)', 'rgba(10,132,255,.20)', 'chips, selected grid row'),
+      g('Status'),
+      c('st-running', '#248A3D', '#30D158', '● Running'),
+      c('st-paused', '#9A6700', '#FFD60A', '◐ Paused'),
+      c('st-busy', '#C93400', '#FF9F0A', '◌ Starting / Stopping'),
+      c('st-stopped', '#6E6E73', '#98989D', '○ Stopped'),
+      c('st-error', '#D70015', '#FF453A', '✕ Crashed / Error, destructive'),
+      c('st-unhealthy', '#C93400', '#FF9F0A', '▲ Unhealthy'),
+      g('Logs & code'),
+      c('log-error', '#C4001A', '#FF6961', 'ERROR / FATAL lines'),
+      c('log-warn', '#A84B00', '#FFB340', 'WARN lines'),
+      c('log-ts', 'rgba(0,0,0,.42)', 'rgba(255,255,255,.40)', 'time column'),
+      c('err-bg', 'rgba(215,0,21,.07)', 'rgba(255,69,58,.12)', 'error line & box fill'),
+      c('ansi-green', '#1F7A35', '#30D158', 'SGR 32 / 92'),
+      c('ansi-yellow', '#8A6100', '#FFD60A', 'SGR 33 / 93'),
+      c('ansi-blue', '#0058C2', '#64A8FF', 'SGR 34 / 94'),
+      c('ansi-magenta', '#9C2FB5', '#DA8FFF', 'SGR 35 / 95, views'),
+      c('ansi-cyan', '#0A7286', '#5AD8E6', 'SGR 36 / 96'),
+      c('sql-kw', '#9C2FB5', '#FF7AB2', 'SQL keywords'),
+      c('sql-str', '#C41A16', '#FC6A5D', 'SQL strings'),
+      c('sql-num', '#1C00CF', '#D0BF69', 'SQL numbers')
+    ];
+    return { spacing, radius, type, opacity, motion, sizes, colors };
+  }
+}
+</script>
+</body>
+</html>

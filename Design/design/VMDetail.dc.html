@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hangar — VM detail</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./hangar.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="hg {{theme}} win" style="width: 100%; min-height: 820px; display: flex; flex-wrap: wrap">
+  <div style="flex: 0 0 232px; display: flex"><dc-import name="Sidebar" dark="{{dark}}" selected="berqNET" hint-size="232px,820px"></dc-import></div>
+  <main style="flex: 999 1 560px; min-width: 0; height: 820px; display: flex; flex-direction: column">
+    <div class="toolbar">
+      <button class="tbb" aria-label="Back"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"></path></svg></button>
+      <button class="tbb" disabled="" aria-label="Forward" style="opacity: 0.3"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"></path></svg></button>
+      <div style="flex: 1; min-width: 0; padding-left: 4px">
+        <div class="tb-title">berqNET</div>
+        <div class="tb-sub">Virtual Machine · UTM</div>
+      </div>
+      <button class="tbb" aria-label="Refresh"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13.2 2.6v2.6h-2.6"></path></svg></button>
+      <label class="field" style="width: 180px"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="m10.5 10.5 3 3"></path></svg><input type="search" placeholder="Search" aria-label="Search sidebar"></label>
+    </div>
+
+    <div class="dh">
+      <div class="dh-ic" aria-hidden="true"><svg viewBox="0 0 24 24" class="ico"><rect x="3" y="4" width="18" height="12.5" rx="2"></rect><path d="M9 20h6M12 16.5V20"></path></svg></div>
+      <div style="flex: 1; min-width: 200px">
+        <div class="dh-name">berqNET</div>
+        <div class="dh-status"><span class="st run" aria-hidden="true">●</span><span class="stw run" style="font-weight: 500">Running</span><span>·</span><span>Up 3 h 12 min</span><span>·</span><span>UTM running hidden</span></div>
+      </div>
+      <button class="btn" disabled=""><svg viewBox="0 0 16 16" aria-hidden="true"><path class="icf" d="M5 3.2v9.6l7.4-4.8z"></path></svg>Start</button>
+      <button class="btn"><svg viewBox="0 0 16 16" class="ico" style="stroke-width: 2" aria-hidden="true"><path d="M5.5 4v8M10.5 4v8"></path></svg>Suspend</button>
+      <button class="btn"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M8 2.5v5M4.6 4.7a5 5 0 1 0 6.8 0"></path></svg>Shut Down</button>
+      <div class="vsep" aria-hidden="true" style="margin: 2px 6px; height: 20px; align-self: center"></div>
+      <button class="btn dest"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M8 2.5 14 13H2z M8 7v2.5"></path></svg>Force Stop…</button>
+    </div>
+
+    <div class="info" style="padding: 0 24px 20px">
+      <div class="k">Name</div><div class="v">berqNET</div>
+      <div class="k">Backend</div><div class="v">QEMU 9.1 <span class="dim3">·</span> aarch64</div>
+      <div class="k">UUID</div><div class="v"><span class="mono" style="font-size: 11px">8C2F4A1E-6B3D-4E9A-9F21-3D7C0B5E2A14</span><button class="tbb" style="height: 18px; min-width: 18px; padding: 0" aria-label="Copy UUID"><svg viewBox="0 0 16 16" class="ico" style="width: 12px; height: 12px" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="1.5"></rect><path d="M3 10.5V4a1.5 1.5 0 0 1 1.5-1.5H10.5"></path></svg></button></div>
+      <div class="k">Resources</div><div class="v">4 cores <span class="dim3">·</span> 8 GB memory</div>
+      <div class="k">IP addresses</div>
+      <div class="v">
+        <sc-if value="{{agent}}" hint-placeholder-val="{{ true }}"><button class="port" aria-label="Copy 192.168.64.5">192.168.64.5</button><button class="port" aria-label="Copy IPv6 address">fe80::5c1e:2ff:fe4a:91</button></sc-if>
+        <sc-if value="{{noAgent}}" hint-placeholder-val="{{ false }}"><span class="dim" style="font-size: 12px">Needs the QEMU guest agent</span><a href="https://docs.getutm.app/guest-support/linux/" style="font-size: 12px">How to install</a></sc-if>
+      </div>
+      <div class="k">Profiles</div><div class="v"><span class="pchip">work<button aria-label="Remove from work"><svg viewBox="0 0 16 16" class="ico" style="width: 9px; height: 9px; stroke-width: 2" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"></path></svg></button></span><span class="pchip">demo-day<button aria-label="Remove from demo-day"><svg viewBox="0 0 16 16" class="ico" style="width: 9px; height: 9px; stroke-width: 2" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"></path></svg></button></span><button class="pchip add" aria-label="Add to profile">+</button></div>
+    </div>
+
+    <section aria-label="Activity" style="flex: 1; min-height: 0; border-top: 0.5px solid var(--sep); padding: 16px 24px; display: flex; flex-direction: column; gap: 12px; background: var(--bg-content)">
+      <div class="sec-h">Activity</div>
+      <div class="tl" style="row-gap: 10px; max-width: 640px">
+        <span class="t">14:20</span><span class="st run" aria-hidden="true">●</span><span>Started by profile <strong style="font-weight: 600">work</strong></span>
+        <span class="t">14:19</span><span class="st busy" style="animation: none" aria-hidden="true">◌</span><span>UTM opened hidden <span class="dim">— it was closed</span></span>
+        <span class="t">Yest.</span><span class="st stop" aria-hidden="true">○</span><span>Shut down from the menu bar <span class="dim">· 19:02</span></span>
+        <span class="t">Yest.</span><span class="st run" aria-hidden="true">●</span><span>Resumed <span class="dim">· 09:10</span></span>
+        <span class="t">Mon</span><span class="st pause" aria-hidden="true">◐</span><span>Suspended <span class="dim">· 18:44 — memory saved to disk (8 GB)</span></span>
+        <span class="t">Mon</span><span class="st err" aria-hidden="true">✕</span><span>Force stopped <span class="dim">· 11:02 — guest didn’t respond to shutdown in 30 s</span></span>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"guestAgent":{"editor":"boolean","default":true},"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const agent = this.props.guestAgent ?? true;
+    return { dark: !!this.props.dark, theme: this.props.dark ? 'dark' : '', agent, noAgent: !agent };
+  }
+}
+</script>
+</body>
+</html>

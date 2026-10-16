@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="hgBg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34466A"/><stop offset="1" stop-color="#151D2E"/></linearGradient>
+    <linearGradient id="hgArch" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F7F9FC"/><stop offset="1" stop-color="#C3CCDA"/></linearGradient>
+  </defs>
+  <rect x="100" y="112" width="824" height="824" rx="186" fill="#000" fill-opacity="0.22"/>
+  <rect x="100" y="100" width="824" height="824" rx="186" fill="url(#hgBg)"/>
+  <rect x="100.5" y="100.5" width="823" height="823" rx="185.5" fill="none" stroke="#FFF" stroke-opacity="0.12"/>
+  <ellipse cx="512" cy="762" rx="320" ry="24" fill="#000" fill-opacity="0.35"/>
+  <path d="M232 752V600a280 280 0 0 1 560 0v152z" fill="url(#hgArch)"/>
+  <path d="M292 752V604a220 220 0 0 1 440 0v148" fill="none" stroke="#8C98AD" stroke-opacity="0.4" stroke-width="6"/>
+  <path d="M352 752V520a20 20 0 0 1 20-20h280a20 20 0 0 1 20 20v232z" fill="#0F1624"/>
+  <rect x="384" y="532" width="256" height="50" rx="12" fill="#25324A"/>
+  <rect x="384" y="600" width="256" height="50" rx="12" fill="#25324A"/>
+  <rect x="384" y="668" width="256" height="50" rx="12" fill="#25324A"/>
+  <circle cx="414" cy="557" r="11" fill="#30D158"/>
+  <circle cx="414" cy="625" r="11" fill="#FFD60A"/>
+  <circle cx="414" cy="693" r="11" fill="#8E8E93"/>
+  <rect x="448" y="551" width="120" height="12" rx="6" fill="#4A5874"/>
+  <rect x="448" y="619" width="96" height="12" rx="6" fill="#4A5874"/>
+  <rect x="448" y="687" width="140" height="12" rx="6" fill="#4A5874"/>
+  <rect x="200" y="748" width="624" height="16" rx="8" fill="#5C6B88"/>
+</svg>

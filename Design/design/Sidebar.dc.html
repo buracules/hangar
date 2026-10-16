@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hangar — sidebar</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./hangar.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<nav class="hg {{theme}} sb" aria-label="Sidebar" style="width: 232px; min-height: 820px; height: 100%; display: flex; flex-direction: column">
+  <div style="height: 52px; flex: 0 0 52px; display: flex; align-items: center; justify-content: space-between; padding: 0 4px 0 12px">
+    <div class="lights" aria-hidden="true"><span></span><span></span><span></span></div>
+    <button class="tbb" aria-label="Hide sidebar"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="2"></rect><path d="M6.5 3v10"></path></svg></button>
+  </div>
+  <sc-for list="{{sections}}" as="sec" hint-placeholder-count="4">
+    <div class="sb-h">
+      <span style="display: flex; align-items: center; gap: 6px">{{sec.title}}<sc-if value="{{sec.preview}}" hint-placeholder-val="{{ false }}"><span class="tag" style="font-weight: 500">Soon</span></sc-if></span>
+      <sc-if value="{{sec.add}}" hint-placeholder-val="{{ false }}"><button class="tbb" style="height: 18px; min-width: 18px; padding: 0" aria-label="{{sec.addLabel}}"><svg viewBox="0 0 16 16" class="ico" style="width: 12px; height: 12px" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></button></sc-if>
+    </div>
+    <sc-if value="{{sec.isEmpty}}" hint-placeholder-val="{{ false }}">
+      <div style="padding: 2px 8px 10px; font-size: 11px; line-height: 15px; color: var(--label-2)">
+        <div>{{sec.emptyText}}</div>
+        <button class="plain" style="font-size: 11px; margin-top: 2px">{{sec.emptyAction}}</button>
+      </div>
+    </sc-if>
+    <sc-for list="{{sec.rows}}" as="r" hint-placeholder-count="2">
+      <sc-if value="{{r.isGroup}}" hint-placeholder-val="{{ false }}">
+        <button class="sb-row" aria-expanded="{{r.open}}" style="gap: 4px; padding-left: 4px">
+          <svg viewBox="0 0 16 16" class="ico chev" style="transform: {{r.rot}}" aria-hidden="true"><path d="M6 4l4 4-4 4"></path></svg>
+          <svg viewBox="0 0 16 16" class="ico" style="width: 14px; height: 14px; flex: 0 0 14px; color: var(--label-2); margin-right: 2px" aria-hidden="true"><path d="M2.5 5 8 2.5 13.5 5v6L8 13.5 2.5 11z M2.5 5 8 7.5 13.5 5 M8 7.5v6"></path></svg>
+          <span class="nm" style="font-weight: 500">{{r.name}}</span>
+          <span class="tr">{{r.trail}}</span>
+        </button>
+      </sc-if>
+      <sc-if value="{{r.isItem}}" hint-placeholder-val="{{ true }}">
+        <button class="sb-row {{r.sel}}" aria-current="{{r.current}}" aria-label="{{r.label}}" style="padding-left: {{r.pad}}">
+          <sc-if value="{{r.isProfile}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 16 16" class="ico" style="width: 13px; height: 13px; flex: 0 0 13px; color: var(--accent-text)" aria-hidden="true"><rect x="2.5" y="6" width="11" height="7.5" rx="1.5"></rect><path d="M4 4h8M5.5 2.2h5"></path></svg></sc-if>
+          <sc-if value="{{r.hasStatus}}" hint-placeholder-val="{{ true }}"><span class="st {{r.s}}" aria-hidden="true">{{r.g}}</span></sc-if>
+          <span class="nm">{{r.name}}</span>
+          <span class="tr {{r.trailCls}}">{{r.trail}}</span>
+        </button>
+      </sc-if>
+    </sc-for>
+  </sc-for>
+</nav>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"empty":{"editor":"boolean","default":false},"selected":{"editor":"enum","options":["work","berqNET","hermes-postgres","portal-web","none"],"default":"hermes-postgres"},"$preview":{"width":232,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sel = this.props.selected ?? 'hermes-postgres';
+    const S = { run: ['run', '●', 'Running'], pause: ['pause', '◐', 'Paused'], busy: ['busy', '◌', 'Starting'], stop: ['stop', '○', 'Stopped'], err: ['err', '✕', 'Exited'], unh: ['unh', '▲', 'Unhealthy'] };
+    const item = (name, st, trail, opts = {}) => {
+      const s = st ? S[st] : null;
+      return {
+        isItem: true, isGroup: false, name, trail,
+        hasStatus: !!s, isProfile: !!opts.profile,
+        s: s ? s[0] : '', g: s ? s[1] : '',
+        label: s ? name + ', ' + s[2] : name + ', ' + trail + ' up',
+        trailCls: opts.mono ? 'mono' : '',
+        pad: opts.indent ? '30px' : '8px',
+        sel: sel === name ? 'sel' : '',
+        current: sel === name ? 'page' : 'false'
+      };
+    };
+    const group = (name, trail, open) => ({ isGroup: true, isItem: false, name, trail, open: open ? 'true' : 'false', rot: open ? 'rotate(90deg)' : 'none' });
+    const full = [
+      { title: 'Profiles', add: true, addLabel: 'New profile', rows: [item('work', null, '2/3', { profile: true }), item('demo-day', null, '0/2', { profile: true })] },
+      { title: 'Virtual Machines', rows: [item('berqNET', 'run', '3h 12m'), item('ubuntu-dev', 'pause', 'Paused'), item('win11', 'stop', '')] },
+      { title: 'Containers', rows: [
+        group('hermes', '2/3', true),
+        item('hermes-postgres', 'run', ':5433', { indent: true, mono: true }),
+        item('hermes-redis', 'run', ':6380', { indent: true, mono: true }),
+        item('hermes-mq', 'busy', 'Starting', { indent: true }),
+        group('portal', '0/2', false),
+        item('mailpit', 'run', ':8025', { mono: true }),
+        item('minio', 'err', 'Exited')
+      ] },
+      { title: 'Projects', preview: true, rows: [item('portal-web', 'run', ':7878', { mono: true }), item('docs-site', 'stop', '')] }
+    ];
+    const emptySecs = [
+      { title: 'Profiles', add: true, addLabel: 'New profile', isEmpty: true, emptyText: 'Group machines you start together.', emptyAction: 'New Profile…', rows: [] },
+      { title: 'Virtual Machines', isEmpty: true, emptyText: 'No VMs found in UTM.', emptyAction: 'Open UTM', rows: [] },
+      { title: 'Containers', isEmpty: true, emptyText: 'Docker isn’t running.', emptyAction: 'Start Docker', rows: [] },
+      { title: 'Projects', preview: true, isEmpty: true, emptyText: 'Run Node and Python dev servers here.', emptyAction: 'Add Project Folder…', rows: [] }
+    ];
+    return { theme: this.props.dark ? 'dark' : '', sections: this.props.empty ? emptySecs : full };
+  }
+}
+</script>
+</body>
+</html>

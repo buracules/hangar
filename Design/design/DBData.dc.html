@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hangar — database data</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./hangar.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="hg {{theme}} win" style="width: 100%; min-height: 820px; display: flex; flex-wrap: wrap">
+  <div style="flex: 0 0 232px; display: flex"><dc-import name="Sidebar" dark="{{dark}}" selected="hermes-postgres" hint-size="232px,820px"></dc-import></div>
+  <main style="flex: 999 1 560px; min-width: 0; height: 820px; display: flex; flex-direction: column">
+    <div class="toolbar">
+      <button class="tbb" aria-label="Back"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"></path></svg></button>
+      <button class="tbb" disabled="" aria-label="Forward" style="opacity: 0.3"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"></path></svg></button>
+      <div style="flex: 1; min-width: 0; padding-left: 4px">
+        <div class="tb-title">hermes-postgres</div>
+        <div class="tb-sub">Container · hermes</div>
+      </div>
+      <button class="tbb" aria-label="Refresh"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13.2 2.6v2.6h-2.6"></path></svg></button>
+      <label class="field" style="width: 180px"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="m10.5 10.5 3 3"></path></svg><input type="search" placeholder="Search" aria-label="Search sidebar"></label>
+    </div>
+
+    <div class="dh">
+      <div class="dh-ic" aria-hidden="true"><svg viewBox="0 0 24 24" class="ico"><ellipse cx="12" cy="6" rx="7" ry="2.6"></ellipse><path d="M5 6v12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6V6M5 12c0 1.4 3.1 2.6 7 2.6s7-1.2 7-2.6"></path></svg></div>
+      <div style="flex: 1; min-width: 200px">
+        <div class="dh-name">hermes-postgres</div>
+        <div class="dh-status"><span class="st run" aria-hidden="true">●</span><span class="stw run" style="font-weight: 500">Running</span><span>·</span><span>Up 2 hours</span><span>·</span><span class="mono" style="font-size: 11px">postgres:17</span><span>·</span><button class="port">:5433</button></div>
+      </div>
+      <button class="btn"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13.2 2.6v2.6h-2.6"></path></svg>Restart</button>
+      <button class="btn"><svg viewBox="0 0 16 16" aria-hidden="true"><rect class="icf" x="4" y="4" width="8" height="8" rx="1.5"></rect></svg>Stop</button>
+      <button class="btn ic" aria-label="More actions" aria-haspopup="menu"><svg viewBox="0 0 16 16" aria-hidden="true"><circle class="icf" cx="3.5" cy="8" r="1.3"></circle><circle class="icf" cx="8" cy="8" r="1.3"></circle><circle class="icf" cx="12.5" cy="8" r="1.3"></circle></svg></button>
+    </div>
+
+    <section aria-label="Database" style="flex: 1; min-height: 0; display: flex; flex-direction: column; border-top: 0.5px solid var(--sep)">
+      <div style="display: flex; align-items: center; gap: 8px; padding: 8px 16px 8px 24px; border-bottom: 0.5px solid var(--sep)">
+        <div class="seg" role="tablist"><button role="tab" aria-selected="false">Logs</button><button class="on" role="tab" aria-selected="true">Database</button></div>
+        <div style="flex: 1"></div>
+        <span class="dim" style="font-size: 11px">psql 17.2 · user <span class="mono" style="font-size: 11px">hermes</span></span>
+      </div>
+
+      <div style="flex: 1; min-height: 0; display: flex; flex-wrap: wrap">
+        <aside aria-label="Tables" style="flex: 0 0 256px; min-height: 0; display: flex; flex-direction: column; gap: 8px; padding: 12px 8px; background: var(--bg-pane); border-right: 0.5px solid var(--sep); overflow: hidden">
+          <button class="popup" style="margin: 0 4px" aria-label="Database: hermes">
+            <span style="display: flex; align-items: center; gap: 6px"><svg viewBox="0 0 16 16" class="ico" style="width: 13px; height: 13px; color: var(--label-2)" aria-hidden="true"><ellipse cx="8" cy="4" rx="5" ry="1.8"></ellipse><path d="M3 4v8c0 1 2.2 1.8 5 1.8s5-.8 5-1.8V4M3 8c0 1 2.2 1.8 5 1.8s5-.8 5-1.8"></path></svg>hermes</span>
+            <svg viewBox="0 0 16 16" class="ico" style="width: 10px; height: 10px; color: var(--label-2)" aria-hidden="true"><path d="m5 6 3-3 3 3M5 10l3 3 3-3"></path></svg>
+          </button>
+          <label class="field" style="margin: 0 4px"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="m10.5 10.5 3 3"></path></svg><input type="search" placeholder="Filter tables" aria-label="Filter tables"></label>
+          <div style="display: flex; flex-direction: column">
+            <sc-for list="{{schemas}}" as="sc" hint-placeholder-count="2">
+              <button class="sb-row" aria-expanded="true" style="gap: 4px; padding-left: 4px; height: 24px">
+                <svg viewBox="0 0 16 16" class="ico chev" style="transform: rotate(90deg)" aria-hidden="true"><path d="M6 4l4 4-4 4"></path></svg>
+                <span class="nm" style="font-size: 11px; font-weight: 600; color: var(--label-2)">{{sc.name}}</span>
+                <span class="tr">{{sc.count}}</span>
+              </button>
+              <sc-for list="{{sc.items}}" as="t" hint-placeholder-count="4">
+                <button class="sb-row {{t.sel}}" style="height: 24px; padding-left: 22px; gap: 6px" aria-label="{{t.label}}">
+                  <sc-if value="{{t.isView}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 16 16" class="ico" style="width: 13px; height: 13px; flex: 0 0 13px; color: var(--ansi-magenta)" aria-hidden="true"><rect x="2.5" y="3" width="11" height="10" rx="1.5" stroke-dasharray="2 1.6"></rect><circle cx="8" cy="8" r="1.6"></circle></svg></sc-if>
+                  <sc-if value="{{t.isTable}}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 16 16" class="ico" style="width: 13px; height: 13px; flex: 0 0 13px; color: var(--accent-text)" aria-hidden="true"><rect x="2.5" y="3" width="11" height="10" rx="1.5"></rect><path d="M2.5 6.5h11M6.5 6.5V13"></path></svg></sc-if>
+                  <span class="nm" style="font-style: {{t.style}}">{{t.name}}</span>
+                  <span class="tr" style="font-size: 10px">{{t.meta}}</span>
+                </button>
+              </sc-for>
+            </sc-for>
+          </div>
+        </aside>
+
+        <div style="flex: 999 1 420px; min-width: 0; min-height: 0; display: flex; flex-direction: column; position: relative">
+          <div style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 0.5px solid var(--sep); flex-wrap: wrap">
+            <div class="seg sm" role="tablist" aria-label="Table view"><button class="{{tabData}}" role="tab" aria-selected="{{selData}}" onClick="{{pickData}}">Data</button><button class="{{tabStruct}}" role="tab" aria-selected="{{selStruct}}" onClick="{{pickStruct}}">Structure</button><button class="{{tabSql}}" role="tab" aria-selected="{{selSql}}" onClick="{{pickSql}}">SQL</button></div>
+            <span class="mono" style="font-weight: 600; margin-left: 4px">{{heading}}</span>
+            <div style="flex: 1"></div>
+            <sc-if value="{{isData}}" hint-placeholder-val="{{ true }}">
+              <label class="field" style="width: 220px"><span class="mono" style="font-size: 11px; color: var(--label-3)">WHERE</span><input type="text" placeholder="role = 'admin'" aria-label="Row filter" style="font-family: var(--font-mono); font-size: 11px"></label>
+              <button class="tbb" aria-label="Reload rows"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13.2 2.6v2.6h-2.6"></path></svg></button>
+            </sc-if>
+            <sc-if value="{{isStruct}}" hint-placeholder-val="{{ false }}">
+              <span class="dim" style="font-size: 11px">9 columns · 3 indexes · 1 foreign key</span>
+              <button class="tbb" aria-label="Copy CREATE TABLE"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="1.5"></rect><path d="M3 10.5V4a1.5 1.5 0 0 1 1.5-1.5H10.5"></path></svg></button>
+            </sc-if>
+            <sc-if value="{{isSql}}" hint-placeholder-val="{{ false }}">
+              <button class="popup" aria-haspopup="menu" style="font-size: 12px">History<svg viewBox="0 0 16 16" class="ico" style="width: 10px; height: 10px; color: var(--label-2)" aria-hidden="true"><path d="m4 6 4 4 4-4"></path></svg></button>
+              <button class="btn sm prim"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="icf" d="M5 3.2v9.6l7.4-4.8z"></path></svg>Run<span style="opacity: 0.8; margin-left: 2px">⌘↩</span></button>
+            </sc-if>
+          </div>
+          <sc-if value="{{isStruct}}" hint-placeholder-val="{{ false }}">
+            <div style="flex: 1; min-height: 0; overflow: auto; padding-bottom: 16px">
+              <table class="dg" aria-label="Columns of public.users">
+                <thead><tr><th>Column</th><th>Type</th><th>Nullable</th><th>Default</th><th style="width: 100%">Keys</th></tr></thead>
+                <tbody>
+                  <tr><td style="font-weight: 600">id</td><td class="dim">bigint</td><td class="null" style="font-style: normal">no</td><td>nextval('users_id_seq'::regclass)</td><td style="font-family: var(--font-ui)"><span class="tag pk">PRIMARY KEY</span></td></tr>
+                  <tr><td style="font-weight: 600">email</td><td class="dim">text</td><td class="null" style="font-style: normal">no</td><td class="null">—</td><td style="font-family: var(--font-ui)"><span class="tag">UNIQUE</span></td></tr>
+                  <tr><td style="font-weight: 600">display_name</td><td class="dim">text</td><td style="font-family: var(--font-ui); font-size: 12px">yes</td><td class="null">NULL</td><td></td></tr>
+                  <tr><td style="font-weight: 600">org_id</td><td class="dim">bigint</td><td class="null" style="font-style: normal">no</td><td class="null">—</td><td style="font-family: var(--font-ui)"><button class="tag fk" style="border: 0; cursor: pointer">FK → organizations.id</button></td></tr>
+                  <tr><td style="font-weight: 600">role</td><td class="dim">user_role</td><td class="null" style="font-style: normal">no</td><td>'member'::user_role</td><td></td></tr>
+                  <tr><td style="font-weight: 600">last_login_at</td><td class="dim">timestamptz</td><td style="font-family: var(--font-ui); font-size: 12px">yes</td><td class="null">NULL</td><td></td></tr>
+                  <tr><td style="font-weight: 600">created_at</td><td class="dim">timestamptz</td><td class="null" style="font-style: normal">no</td><td>now()</td><td></td></tr>
+                  <tr><td style="font-weight: 600">deleted_at</td><td class="dim">timestamptz</td><td style="font-family: var(--font-ui); font-size: 12px">yes</td><td class="null">NULL</td><td></td></tr>
+                  <tr><td style="font-weight: 600">settings</td><td class="dim">jsonb</td><td class="null" style="font-style: normal">no</td><td>'{}'::jsonb</td><td></td></tr>
+                </tbody>
+              </table>
+              <div class="sec-h" style="padding: 20px 12px 6px">Indexes</div>
+              <table class="dg" aria-label="Indexes of public.users">
+                <thead><tr><th>Name</th><th>Columns</th><th>Method</th><th style="width: 100%">Size</th></tr></thead>
+                <tbody>
+                  <tr><td>users_pkey</td><td>(id)</td><td class="dim">btree · unique</td><td class="num" style="text-align: left">288 kB</td></tr>
+                  <tr><td>users_email_key</td><td>(email)</td><td class="dim">btree · unique</td><td class="num" style="text-align: left">512 kB</td></tr>
+                  <tr><td>users_org_id_idx</td><td>(org_id)</td><td class="dim">btree</td><td class="num" style="text-align: left">256 kB</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </sc-if>
+          <sc-if value="{{isSql}}" hint-placeholder-val="{{ false }}">
+            <div style="flex: 1; min-height: 0; display: flex; flex-direction: column">
+              <div class="ed" role="textbox" aria-multiline="true" aria-label="SQL editor" style="padding: 8px 0; border-bottom: 0.5px solid var(--sep)">
+                <div class="ln"><span class="g">1</span><span><span class="sk">SELECT</span> u.email, o.name <span class="sk">AS</span> org, <span class="sf">count</span>(m.*) <span class="sk">AS</span> memberships</span></div>
+                <div class="ln"><span class="g">2</span><span><span class="sk">FROM</span> users u</span></div>
+                <div class="ln"><span class="g">3</span><span><span class="sk">JOIN</span> organizations o <span class="sk">ON</span> o.id = u.org_id</span></div>
+                <div class="ln"><span class="g">4</span><span><span class="sk">LEFT JOIN</span> memberships m <span class="sk">ON</span> m.user_id = u.id</span></div>
+                <div class="ln"><span class="g">5</span><span><span class="sk">WHERE</span> u.deleted_at <span class="sk">IS NULL</span> <span class="sk">AND</span> u.role &lt;&gt; <span class="ss">'service'</span></span></div>
+                <div class="ln"><span class="g">6</span><span><span class="sk">GROUP BY</span> <span class="sn">1</span>, <span class="sn">2</span> <span class="sk">ORDER BY</span> <span class="sn">3</span> <span class="sk">DESC LIMIT</span> <span class="sn">200</span>;<span style="display: inline-block; width: 1.5px; height: 15px; margin-left: 1px; vertical-align: -3px; background: var(--accent)"></span></span></div>
+              </div>
+              <div style="flex: 1; min-height: 0; overflow: auto">
+                <table class="dg" aria-label="Query results">
+                  <thead><tr><th style="width: 40px"></th><th>email<span class="ty">text</span></th><th>org<span class="ty">text</span></th><th style="width: 100%">memberships<span class="ty">int8</span></th></tr></thead>
+                  <tbody>
+                    <tr><td class="rn">1</td><td>ada@hermes.dev</td><td>Hermes</td><td class="num" style="text-align: left">6</td></tr>
+                    <tr><td class="rn">2</td><td>sam@studio-nine.test</td><td>Studio Nine</td><td class="num" style="text-align: left">5</td></tr>
+                    <tr><td class="rn">3</td><td>deniz@hermes.dev</td><td>Hermes</td><td class="num" style="text-align: left">4</td></tr>
+                    <tr><td class="rn">4</td><td>lea.martin@acme.test</td><td>Acme</td><td class="num" style="text-align: left">4</td></tr>
+                    <tr><td class="rn">5</td><td>jonas@acme.test</td><td>Acme</td><td class="num" style="text-align: left">3</td></tr>
+                    <tr><td class="rn">6</td><td>yuki@studio-nine.test</td><td>Studio Nine</td><td class="num" style="text-align: left">3</td></tr>
+                    <tr><td class="rn">7</td><td>priya@acme.test</td><td>Acme</td><td class="num" style="text-align: left">2</td></tr>
+                    <tr><td class="rn">8</td><td>noah@hermes.dev</td><td>Hermes</td><td class="num" style="text-align: left">2</td></tr>
+                    <tr><td class="rn">9</td><td>m.ozturk@example.com</td><td>Hermes</td><td class="num" style="text-align: left">1</td></tr>
+                    <tr><td class="rn">10</td><td>e.demir@example.com</td><td>Kuzey Labs</td><td class="num" style="text-align: left">1</td></tr>
+                    <tr><td class="rn">11</td><td>tom@studio-nine.test</td><td>Studio Nine</td><td class="num" style="text-align: left">0</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-top: 0.5px solid var(--sep); background: var(--bg-pane); font-size: 11px">
+                <span class="st run" aria-hidden="true">●</span><span>200 rows</span><span class="dim3">·</span><span class="dim">34 ms</span>
+                <div style="flex: 1"></div>
+                <span class="dim">hermes · public</span>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{isData}}" hint-placeholder-val="{{ true }}">
+          <div style="flex: 1; min-height: 0; overflow: auto">
+            <table class="dg" aria-label="public.users rows">
+              <thead><tr><th style="width: 40px"></th><th>id<span class="ty">int8</span></th><th>email<span class="ty">text</span></th><th>display_name<span class="ty">text</span></th><th>org_id<span class="ty">int8</span></th><th>role<span class="ty">user_role</span></th><th>last_login_at<span class="ty">timestamptz</span></th><th>deleted_at<span class="ty">timestamptz</span></th><th>settings<span class="ty">jsonb</span></th></tr></thead>
+              <tbody>
+                <tr><td class="rn">1</td><td class="num">1042</td><td>ada@hermes.dev</td><td>Ada Yılmaz</td><td class="num">12</td><td>owner</td><td>2026-10-16 14:02:11+03</td><td class="null">NULL</td><td title="{&quot;theme&quot;:&quot;dark&quot;,&quot;beta&quot;:true,&quot;notify&quot;:{&quot;email&quot;:true,&quot;digest&quot;:&quot;weekly&quot;}}">{"theme":"dark","beta":true,"notify":{"email":true,"digest":"weekly"}}</td></tr>
+                <tr><td class="rn">2</td><td class="num">1043</td><td>deniz@hermes.dev</td><td>Deniz Kaya</td><td class="num">12</td><td>admin</td><td>2026-10-16 11:47:30+03</td><td class="null">NULL</td><td>{"theme":"system"}</td></tr>
+                <tr><td class="rn">3</td><td class="num">1044</td><td>m.ozturk@example.com</td><td class="null">NULL</td><td class="num">12</td><td>member</td><td>2026-10-15 18:20:04+03</td><td class="null">NULL</td><td>{}</td></tr>
+                <tr><td class="rn">4</td><td class="num">1045</td><td>jonas@acme.test</td><td>Jonas Berg</td><td class="num">14</td><td>member</td><td>2026-10-12 09:13:55+03</td><td class="null">NULL</td><td>{"theme":"light","locale":"de-DE","tz":"Europe/Berlin"}</td></tr>
+                <tr><td class="rn">5</td><td class="num">1046</td><td>ops+alerts@hermes.dev</td><td>Ops Alerts</td><td class="num">12</td><td>service</td><td class="null">NULL</td><td class="null">NULL</td><td>{"bot":true}</td></tr>
+                <tr class="sel"><td class="rn">6</td><td class="num">1047</td><td class="cur">lea.martin@acme.test</td><td>Léa Martin</td><td class="num">14</td><td>admin</td><td>2026-10-16 08:01:42+03</td><td class="null">NULL</td><td>{}</td></tr>
+                <tr><td class="rn">7</td><td class="num">1048</td><td>old-account@hermes.dev</td><td class="null">NULL</td><td class="num">12</td><td>member</td><td>2025-03-02 10:44:19+03</td><td>2025-04-01 00:00:00+03</td><td>{}</td></tr>
+                <tr><td class="rn">8</td><td class="num">1049</td><td>sam@studio-nine.test</td><td>Sam Okafor</td><td class="num">19</td><td>owner</td><td>2026-10-14 22:31:08+03</td><td class="null">NULL</td><td>{"theme":"dark","shortcuts":{"run":"cmd+enter","palette":"cmd+k"}}</td></tr>
+                <tr><td class="rn">9</td><td class="num">1050</td><td>yuki@studio-nine.test</td><td>Yuki Tanaka</td><td class="num">19</td><td>member</td><td>2026-10-16 13:55:00+03</td><td class="null">NULL</td><td>{}</td></tr>
+                <tr><td class="rn">10</td><td class="num">1051</td><td>e.demir@example.com</td><td>Elif Demir</td><td class="num">21</td><td>member</td><td class="null">NULL</td><td class="null">NULL</td><td>{}</td></tr>
+                <tr><td class="rn">11</td><td class="num">1052</td><td>qa-bot@hermes.dev</td><td>QA Bot</td><td class="num">12</td><td>service</td><td>2026-10-16 14:30:12+03</td><td class="null">NULL</td><td>{"bot":true,"suite":"nightly"}</td></tr>
+                <tr><td class="rn">12</td><td class="num">1053</td><td>priya@acme.test</td><td>Priya Nair</td><td class="num">14</td><td>member</td><td>2026-10-09 16:12:47+03</td><td class="null">NULL</td><td>{}</td></tr>
+                <tr><td class="rn">13</td><td class="num">1054</td><td>tom@studio-nine.test</td><td class="null">NULL</td><td class="num">19</td><td>invited</td><td class="null">NULL</td><td class="null">NULL</td><td>{}</td></tr>
+                <tr><td class="rn">14</td><td class="num">1055</td><td>noah@hermes.dev</td><td>Noah Weber</td><td class="num">12</td><td>member</td><td>2026-10-16 12:20:39+03</td><td class="null">NULL</td><td>{"theme":"light"}</td></tr>
+                <tr><td class="rn">15</td><td class="num">1056</td><td>carla@acme.test</td><td>Carla Ruiz</td><td class="num">14</td><td>member</td><td>2026-09-30 10:05:13+03</td><td class="null">NULL</td><td>{}</td></tr>
+                <tr><td class="rn">16</td><td class="num">1057</td><td>felix@acme.test</td><td>Felix Braun</td><td class="num">14</td><td>member</td><td>2026-10-16 10:44:51+03</td><td class="null">NULL</td><td>{"locale":"de-DE"}</td></tr>
+                <tr><td class="rn">17</td><td class="num">1058</td><td>support@studio-nine.test</td><td>Support</td><td class="num">19</td><td>service</td><td class="null">NULL</td><td class="null">NULL</td><td>{"bot":true}</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <sc-if value="{{showMenu}}" hint-placeholder-val="{{ false }}">
+            <div class="menu" role="menu" aria-label="Cell actions" style="position: absolute; top: 214px; left: 236px">
+              <div class="mi hi" role="menuitem">Copy Value<span class="sc">⌘C</span></div>
+              <div class="mi" role="menuitem">Copy Row<span class="sc">⇧⌘C</span></div>
+              <div class="mi" role="menuitem">Copy Row as INSERT</div>
+              <div class="msep"></div>
+              <div class="mi" role="menuitem">Filter Rows Where email = Value</div>
+              <div class="mi" role="menuitem">Show Full Value…<span class="sc">Space</span></div>
+            </div>
+          </sc-if>
+          <div style="display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border-top: 0.5px solid var(--sep); background: var(--bg-pane); font-size: 11px">
+            <span>Rows 1–200</span><span class="dim">of ~12,480</span><span class="dim3">·</span><span class="dim">34 ms</span>
+            <div style="flex: 1"></div>
+            <button class="btn sm" disabled="">Previous</button>
+            <button class="btn sm">Next</button>
+          </div>
+          </sc-if>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"showMenu":{"editor":"boolean","default":true},"view":{"editor":"enum","options":["data","structure","sql"],"default":"data"},"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const t = (name, meta, opts = {}) => ({
+      name, meta, isView: !!opts.view, isTable: !opts.view,
+      style: opts.view ? 'italic' : 'normal',
+      sel: opts.sel ? 'sel' : '',
+      label: (opts.view ? 'View ' : 'Table ') + name + ', ' + meta
+    });
+    const schemas = [
+      { name: 'public', count: '7', items: [
+        t('audit_events', '~1.4M · 312 MB'),
+        t('invites', '~340 · 96 kB'),
+        t('memberships', '~12k · 1.2 MB'),
+        t('organizations', '~210 · 64 kB'),
+        t('users', '~12k · 4 MB', { sel: true }),
+        t('active_users', 'view', { view: true }),
+        t('org_seat_usage', 'view', { view: true })
+      ] },
+      { name: 'billing', count: '3', items: [
+        t('invoices', '~8.1k · 2 MB'),
+        t('plans', '6 · 16 kB'),
+        t('mrr_by_month', 'view', { view: true })
+      ] }
+    ];
+    const view = (this.state && this.state.view) || this.props.view || 'data';
+    const go = (v) => () => this.setState({ view: v });
+    return {
+      dark: !!this.props.dark, theme: this.props.dark ? 'dark' : '', schemas,
+      showMenu: view === 'data' && (this.props.showMenu ?? true),
+      isData: view === 'data', isStruct: view === 'structure', isSql: view === 'sql',
+      tabData: view === 'data' ? 'on' : '', tabStruct: view === 'structure' ? 'on' : '', tabSql: view === 'sql' ? 'on' : '',
+      selData: view === 'data' ? 'true' : 'false', selStruct: view === 'structure' ? 'true' : 'false', selSql: view === 'sql' ? 'true' : 'false',
+      heading: view === 'sql' ? 'Query 3' : 'public.users',
+      pickData: go('data'), pickStruct: go('structure'), pickSql: go('sql')
+    };
+  }
+}
+</script>
+</body>
+</html>

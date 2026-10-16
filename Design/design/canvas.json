@@ -1,0 +1,181 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Components.dc.html": {
+      "h": 1240,
+      "title": "Component sheet",
+      "w": 1360,
+      "x": 0,
+      "y": 5400
+    },
+    "ContainerLogs.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "title": "3 · Container — Logs",
+      "w": 1280,
+      "x": 0,
+      "y": 1400
+    },
+    "DBData.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "is_interactive": true,
+      "title": "4a · Database — Data (light)",
+      "w": 1280,
+      "x": 1360,
+      "y": 1400
+    },
+    "DBDataDark.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "title": "4a · Database — Data (dark)",
+      "w": 1280,
+      "x": 2720,
+      "y": 1400
+    },
+    "DBSQL.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "title": "4c · Database — SQL",
+      "w": 1280,
+      "x": 1360,
+      "y": 2640
+    },
+    "DBStates.dc.html": {
+      "h": 1100,
+      "title": "States — empty, loading, error",
+      "w": 1440,
+      "x": 2720,
+      "y": 2640
+    },
+    "DBStructure.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "title": "4b · Database — Structure",
+      "w": 1280,
+      "x": 0,
+      "y": 2640
+    },
+    "Icons.dc.html": {
+      "h": 900,
+      "title": "App icon & menu bar icon",
+      "w": 1360,
+      "x": 872,
+      "y": 0
+    },
+    "Main.dc.html": {
+      "h": 900,
+      "title": "1 · Menu bar panel",
+      "w": 480,
+      "x": 0,
+      "y": 0
+    },
+    "ProfileDetail.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "title": "6 · Profile detail",
+      "w": 1280,
+      "x": 1360,
+      "y": 4160
+    },
+    "ProjectDetail.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "title": "7 · Project detail (future)",
+      "w": 1280,
+      "x": 2720,
+      "y": 4160
+    },
+    "Sidebar.dc.html": {
+      "h": 820,
+      "title": "2 · Sidebar",
+      "w": 232,
+      "x": 560,
+      "y": 0
+    },
+    "Tokens.dc.html": {
+      "h": 1560,
+      "title": "Tokens",
+      "w": 1280,
+      "x": 1440,
+      "y": 5400
+    },
+    "VMDetail.dc.html": {
+      "expand": "fill",
+      "h": 820,
+      "title": "5 · VM detail",
+      "w": 1280,
+      "x": 0,
+      "y": 4160
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-10-16T11:40:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "tA": {
+      "kind": "title1",
+      "maxW": 2232,
+      "text": "Menu bar, sidebar & icons",
+      "w": 240,
+      "x": 0,
+      "y": -300
+    },
+    "tB": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "Container detail — Logs, Database (light / dark)",
+      "w": 240,
+      "x": 0,
+      "y": 1100
+    },
+    "tC": {
+      "kind": "title1",
+      "maxW": 4160,
+      "text": "Database — Structure, SQL, states",
+      "w": 240,
+      "x": 0,
+      "y": 2340
+    },
+    "tD": {
+      "kind": "title1",
+      "maxW": 4000,
+      "text": "VM · Profile · Project",
+      "w": 240,
+      "x": 0,
+      "y": 3860
+    },
+    "tE": {
+      "kind": "title1",
+      "maxW": 2720,
+      "text": "Components & tokens",
+      "w": 240,
+      "x": 0,
+      "y": 5100
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Sidebar.dc.html",
+    "Icons.dc.html",
+    "ContainerLogs.dc.html",
+    "DBData.dc.html",
+    "DBDataDark.dc.html",
+    "DBStructure.dc.html",
+    "DBSQL.dc.html",
+    "DBStates.dc.html",
+    "VMDetail.dc.html",
+    "ProfileDetail.dc.html",
+    "ProjectDetail.dc.html",
+    "Components.dc.html",
+    "Tokens.dc.html"
+  ],
+  "pages": [],
+  "title": "Hangar"
+}

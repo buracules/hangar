@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hangar — database structure</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./hangar.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 820px">
+  <dc-import name="DBData" dark="{{dark}}" view="structure" hint-size="100%,820px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { dark: !!this.props.dark };
+  }
+}
+</script>
+</body>
+</html>

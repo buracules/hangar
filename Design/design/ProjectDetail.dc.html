@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hangar — project detail</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./hangar.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="hg {{theme}} win" style="width: 100%; min-height: 820px; display: flex; flex-wrap: wrap">
+  <div style="flex: 0 0 232px; display: flex"><dc-import name="Sidebar" dark="{{dark}}" selected="portal-web" hint-size="232px,820px"></dc-import></div>
+  <main style="flex: 999 1 560px; min-width: 0; height: 820px; display: flex; flex-direction: column">
+    <div class="toolbar">
+      <button class="tbb" aria-label="Back"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5"></path></svg></button>
+      <button class="tbb" disabled="" aria-label="Forward" style="opacity: 0.3"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5"></path></svg></button>
+      <div style="flex: 1; min-width: 0; padding-left: 4px">
+        <div class="tb-title">portal-web</div>
+        <div class="tb-sub">Project · Next.js</div>
+      </div>
+      <button class="tbb" aria-label="Refresh"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13.2 2.6v2.6h-2.6"></path></svg></button>
+      <label class="field" style="width: 180px"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="m10.5 10.5 3 3"></path></svg><input type="search" placeholder="Search" aria-label="Search sidebar"></label>
+    </div>
+
+    <div class="dh">
+      <div class="dh-ic" aria-hidden="true"><svg viewBox="0 0 24 24" class="ico"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z"></path><path d="m8 10 3 2.5L8 15M13 15h3.5"></path></svg></div>
+      <div style="flex: 1; min-width: 220px">
+        <div class="dh-name">portal-web</div>
+        <div class="dh-status"><span class="st {{st.s}}" aria-hidden="true">{{st.g}}</span><span class="stw {{st.s}}" style="font-weight: 500">{{st.word}}</span><span>·</span><span>{{st.detail}}</span></div>
+      </div>
+      <a class="btn" href="http://portal-web.localhost:7878" style="color: var(--label); text-decoration: none"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M9.5 2.5h4v4M13.5 2.5 7.5 8.5M12 9.5v3a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h3"></path></svg>Open in Browser</a>
+      <sc-if value="{{st.up}}" hint-placeholder-val="{{ true }}">
+        <button class="btn"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13.2 2.6v2.6h-2.6"></path></svg>Restart</button>
+        <button class="btn"><svg viewBox="0 0 16 16" aria-hidden="true"><rect class="icf" x="4" y="4" width="8" height="8" rx="1.5"></rect></svg>Stop</button>
+      </sc-if>
+      <sc-if value="{{st.down}}" hint-placeholder-val="{{ false }}">
+        <button class="btn prim"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="icf" d="M5 3.2v9.6l7.4-4.8z"></path></svg>{{st.startLabel}}</button>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{st.banner}}" hint-placeholder-val="{{ false }}">
+      <div style="margin: 0 24px 12px; padding: 8px 12px; border-radius: 6px; background: var(--err-bg); box-shadow: inset 0 0 0 0.5px var(--err-border); font-size: 12px; display: flex; align-items: center; gap: 8px">
+        <span>{{st.bannerText}}</span><div style="flex: 1"></div><button class="btn sm">{{st.bannerAction}}</button>
+      </div>
+    </sc-if>
+
+    <div class="info" style="padding: 0 24px 16px">
+      <div class="k">Command</div><div class="v"><code class="mono" style="padding: 1px 6px; border-radius: 4px; background: var(--fill-2)">pnpm dev</code></div>
+      <div class="k">Directory</div><div class="v mono" style="font-size: 11px">~/code/portal/apps/web</div>
+      <div class="k">Port</div><div class="v"><button class="port">:7878</button><span class="dim" style="font-size: 11px">assigned · 3000 was taken</span></div>
+      <div class="k">URL</div><div class="v"><a href="http://portal-web.localhost:7878" class="mono" style="font-size: 11px">http://portal-web.localhost:7878</a></div>
+      <div class="k">PID</div><div class="v mono">48213</div>
+      <div class="k">Uptime</div><div class="v">41 min</div>
+      <div class="k">Health check</div><div class="v"><span class="mono" style="font-size: 11px">GET /</span><span class="dim" style="font-size: 12px">every 10 s · 200 in 84 ms, 2 s ago</span></div>
+      <div class="k">Profiles</div><div class="v"><button class="pchip add" aria-label="Add to profile">+ Add</button></div>
+    </div>
+
+    <section style="flex: 1; min-height: 0; display: flex; flex-wrap: wrap; border-top: 0.5px solid var(--sep)">
+      <div style="flex: 999 1 420px; min-width: 0; min-height: 0; display: flex; flex-direction: column">
+        <div style="display: flex; align-items: center; gap: 8px; padding: 8px 16px 8px 24px; flex-wrap: wrap; border-bottom: 0.5px solid var(--sep)">
+          <div class="seg" role="tablist"><button class="on" role="tab" aria-selected="true">Logs</button><button role="tab" aria-selected="false">Environment</button></div>
+          <div style="flex: 1"></div>
+          <label class="field" style="width: 160px"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M2.5 3.5h11l-4.2 5v4l-2.6 1v-5z"></path></svg><input type="text" placeholder="Filter" aria-label="Filter log lines"></label>
+          <button class="tbb" aria-pressed="false" style="font-size: 12px">Wrap</button>
+          <button class="tbb on" aria-pressed="true" style="font-size: 12px"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M8 2.5v9M4.5 8 8 11.5 11.5 8M3.5 13.5h9"></path></svg>Follow</button>
+          <button class="tbb" aria-label="Copy visible logs"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="1.5"></rect><path d="M3 10.5V4a1.5 1.5 0 0 1 1.5-1.5H10.5"></path></svg></button>
+        </div>
+        <div class="logs" style="flex: 1; min-height: 0; overflow: hidden">
+          <div class="ll dbg"><span class="ts">14:11:58</span><span>$ pnpm dev</span></div>
+          <div class="ll"><span class="ts">14:11:59</span><span>  <span class="a-bold">▲ Next.js 15.0.3</span></span></div>
+          <div class="ll"><span class="ts">14:11:59</span><span>  - Local:        <span class="a-c">http://localhost:7878</span></span></div>
+          <div class="ll"><span class="ts">14:11:59</span><span>  - Environments: .env.local</span></div>
+          <div class="ll"><span class="ts">14:12:03</span><span> <span class="a-g">✓</span> Ready in 1.8s</span></div>
+          <div class="ll"><span class="ts">14:12:09</span><span> <span class="a-b">○</span> Compiling / ...</span></div>
+          <div class="ll"><span class="ts">14:12:11</span><span> <span class="a-g">✓</span> Compiled / in 2.3s (812 modules)</span></div>
+          <div class="ll"><span class="ts">14:12:11</span><span> GET / <span class="a-g">200</span> in 2412ms</span></div>
+          <div class="ll warn"><span class="ts">14:31:40</span><span> ⚠ Fast Refresh had to perform a full reload due to a runtime error.</span></div>
+          <div class="ll err"><span class="ts">14:50:52</span><span> ⨯ Error: fetch failed — connect ECONNREFUSED 127.0.0.1:3000 (portal-api)</span></div>
+          <div class="ll err"><span class="ts">14:50:52</span><span>     at async getSession (app/lib/session.ts:18:15)</span></div>
+          <div class="ll"><span class="ts">14:50:52</span><span> GET / <span style="color: var(--log-error)">500</span> in 120ms</span></div>
+          <div class="ll"><span class="ts">14:51:02</span><span> GET / <span style="color: var(--log-error)">500</span> in 96ms</span></div>
+          <div class="ll"><span class="ts">14:51:20</span><span> GET / <span class="a-g">200</span> in 84ms</span></div>
+          <div class="ll dbg"><span class="ts">14:51:30</span><span> GET /_next/static/chunks/app/page.js <span class="a-g">200</span> in 3ms</span></div>
+          <div class="ll"><span class="ts">14:52:10</span><span> GET /api/health <span class="a-g">200</span> in 5ms</span></div>
+        </div>
+      </div>
+      <aside aria-label="Events" style="flex: 1 1 300px; max-width: 360px; min-height: 0; border-left: 0.5px solid var(--sep); background: var(--bg-pane); padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+        <div class="sec-h">Events</div>
+        <div class="tl" style="row-gap: 10px">
+          <span class="t">14:51</span><span class="st run" aria-hidden="true">●</span><span>Health check passing again <span class="dim">· 200 in 84 ms</span></span>
+          <span class="t">14:50</span><span class="st unh" aria-hidden="true">▲</span><span>Unhealthy <span class="dim">· GET / returned 500 twice</span></span>
+          <span class="t">14:12</span><span class="st run" aria-hidden="true">●</span><span>Ready on <span class="mono" style="font-size: 11px">portal-web.localhost:7878</span></span>
+          <span class="t">14:12</span><span class="st stop" aria-hidden="true" style="color: var(--accent-text)">↔</span><span>Port 7878 assigned <span class="dim">· 3000 is used by portal-api</span></span>
+          <span class="t">14:11</span><span class="st busy" aria-hidden="true" style="animation: none">◌</span><span>Started <span class="mono" style="font-size: 11px">pnpm dev</span> <span class="dim">· PID 48213</span></span>
+          <span class="t">14:11</span><span class="st err" aria-hidden="true">✕</span><span>Crashed <span class="dim">· exit code 1 — Cannot find module 'next'</span></span>
+          <span class="t">14:09</span><span class="st busy" aria-hidden="true" style="animation: none">◌</span><span>Started by profile <strong style="font-weight: 600">work</strong></span>
+        </div>
+      </aside>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"status":{"editor":"enum","options":["running","starting","unhealthy","crashed","portConflict","needsConfig"],"default":"running"},"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const map = {
+      running: { s: 'run', g: '●', word: 'Running', detail: 'Up 41 min · health check passing', up: true },
+      starting: { s: 'busy', g: '◌', word: 'Starting', detail: 'waiting for port 7878 to answer…', up: true },
+      unhealthy: { s: 'unh', g: '▲', word: 'Unhealthy', detail: 'GET / returned 500 twice in a row', up: true },
+      crashed: { s: 'err', g: '✕', word: 'Crashed', detail: 'exit code 1 at 14:11:40', up: false, startLabel: 'Start', banner: true, bannerText: 'Error: Cannot find module ‘next’ — run pnpm install in apps/web.', bannerAction: 'Show Log' },
+      portConflict: { s: 'err', g: '✕', word: 'Port conflict', detail: '7878 is in use by node (PID 3120)', up: false, startLabel: 'Start on Free Port', banner: true, bannerText: 'Port 7878 is held by another process: node, PID 3120.', bannerAction: 'Reveal Process' },
+      needsConfig: { s: 'stop', g: '○', word: 'Needs config', detail: 'no start command set', up: false, startLabel: 'Configure…' }
+    };
+    const st = map[this.props.status ?? 'running'] || map.running;
+    return { dark: !!this.props.dark, theme: this.props.dark ? 'dark' : '', st: { ...st, down: !st.up, banner: !!st.banner } };
+  }
+}
+</script>
+</body>
+</html>

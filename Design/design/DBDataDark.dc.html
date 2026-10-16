@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hangar — database data, dark</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./hangar.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0;background:#1E1E1E}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 820px; background: #1E1E1E">
+  <dc-import name="DBData" dark="{{true}}" show-menu="{{showMenu}}" hint-size="100%,820px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"showMenu":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { showMenu: this.props.showMenu ?? false };
+  }
+}
+</script>
+</body>
+</html>

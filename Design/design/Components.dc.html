@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hangar — component sheet</title>
+<script src="./support.js"></script>
+<link rel="stylesheet" href="./hangar.css">
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div class="hg {{theme}}" style="width: 1360px; height: 1240px; box-sizing: border-box; padding: 48px; background: var(--bg-pane); display: flex; flex-direction: column; gap: 24px">
+  <div>
+    <h1 style="margin: 0; font-size: 22px; font-weight: 700">Components</h1>
+    <p class="dim" style="margin: 4px 0 0">Every state = shape + color + word. Class names match <span class="mono">hangar.css</span>; SwiftUI names in the right-hand column.</p>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: start">
+
+    <div style="display: flex; flex-direction: column; gap: 24px">
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Status shapes · StatusBadge</div>
+        <div style="display: grid; grid-template-columns: 16px 92px minmax(0, 1fr); row-gap: 8px; column-gap: 8px; align-items: center; font-size: 12px">
+          <span class="st run" aria-hidden="true">●</span><span class="stw run" style="font-weight: 500">Running</span><span class="mono dim" style="font-size: 11px">st-running · circle.fill</span>
+          <span class="st pause" aria-hidden="true">◐</span><span class="stw pause" style="font-weight: 500">Paused</span><span class="mono dim" style="font-size: 11px">st-paused · circle.lefthalf.filled</span>
+          <span class="st busy" aria-hidden="true">◌</span><span class="stw busy" style="font-weight: 500">Starting…</span><span class="mono dim" style="font-size: 11px">st-busy · circle.dotted, spins dur-spin</span>
+          <span class="st busy" aria-hidden="true">◌</span><span class="stw busy" style="font-weight: 500">Stopping…</span><span class="mono dim" style="font-size: 11px">st-busy · same, word differs</span>
+          <span class="st stop" aria-hidden="true">○</span><span class="stw stop" style="font-weight: 500">Stopped</span><span class="mono dim" style="font-size: 11px">st-stopped · circle</span>
+          <span class="st err" aria-hidden="true">✕</span><span class="stw err" style="font-weight: 500">Crashed</span><span class="mono dim" style="font-size: 11px">st-error · xmark</span>
+          <span class="st unh" aria-hidden="true">▲</span><span class="stw unh" style="font-weight: 500">Unhealthy</span><span class="mono dim" style="font-size: 11px">st-unhealthy · triangle.fill</span>
+        </div>
+        <p class="dim" style="margin: 12px 0 0; font-size: 11px; line-height: 15px">Shape 12×12 pt, 11 pt glyph. Reduce Motion stops the spin. Profiles show a count (“2/3”), never a shape — partial isn’t a machine state.</p>
+      </section>
+
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Sidebar rows · SidebarRow (h-row 28)</div>
+        <div class="sb" style="border-radius: 8px; padding: 4px 8px 8px; border: 0">
+          <div class="sb-h"><span>Containers</span><button class="tbb" style="height: 18px; min-width: 18px; padding: 0" aria-label="Add"><svg viewBox="0 0 16 16" class="ico" style="width: 12px; height: 12px" aria-hidden="true"><path d="M8 3v10M3 8h10"></path></svg></button></div>
+          <button class="sb-row" aria-expanded="true" style="gap: 4px; padding-left: 4px"><svg viewBox="0 0 16 16" class="ico chev" style="transform: rotate(90deg)" aria-hidden="true"><path d="M6 4l4 4-4 4"></path></svg><span class="nm" style="font-weight: 500">hermes · group, open</span><span class="tr">2/3</span></button>
+          <button class="sb-row" style="padding-left: 30px"><span class="st run" aria-hidden="true">●</span><span class="nm">default, child</span><span class="tr mono">:5433</span></button>
+          <button class="sb-row" style="padding-left: 30px; background: var(--fill-1)"><span class="st busy" aria-hidden="true">◌</span><span class="nm">hover</span><span class="tr">Starting</span></button>
+          <button class="sb-row sel" style="padding-left: 30px"><span class="st run" aria-hidden="true">●</span><span class="nm">selected</span><span class="tr mono">:6380</span></button>
+          <button class="sb-row" aria-expanded="false" style="gap: 4px; padding-left: 4px"><svg viewBox="0 0 16 16" class="ico chev" aria-hidden="true"><path d="M6 4l4 4-4 4"></path></svg><span class="nm" style="font-weight: 500">portal · group, closed</span><span class="tr">0/2</span></button>
+          <button class="sb-row"><span class="st err" aria-hidden="true">✕</span><span class="nm">a-very-long-container-name-truncates</span><span class="tr">Exited</span></button>
+        </div>
+      </section>
+
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Menu bar · VMs when UTM is closed</div>
+        <div style="background: var(--bg-popover); border-radius: 8px; padding: 6px 0">
+          <div style="margin: 0 8px 4px; padding: 6px 10px; border-radius: 6px; background: var(--fill-1); font-size: 11px; color: var(--label-2)">UTM is closed — starting a VM opens it hidden.</div>
+          <div style="display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 8px 0 12px"><span class="st stop" aria-hidden="true">○</span><span style="font-weight: 500">berqNET</span><span class="stw stop" style="font-size: 11px; flex: 1">Stopped</span><button class="tbb" style="height: 22px; min-width: 22px" aria-label="Start berqNET"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="icf" d="M5 3.2v9.6l7.4-4.8z"></path></svg></button></div>
+        </div>
+      </section>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 24px">
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Profile card · ProfileCard (menu bar)</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; padding: 8px; border-radius: 8px; background: var(--bg-popover)">
+          <div class="card" style="display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 12px">
+            <div style="flex: 1; min-width: 0"><div style="display: flex; align-items: baseline; gap: 8px"><span style="font-weight: 600">work</span><span class="count">2/3 up</span></div><div class="dim" style="font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">berqNET · hermes-postgres · portal-api</div></div>
+            <button class="btn sm ic prim" aria-label="Start work"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="icf" d="M5 3.2v9.6l7.4-4.8z"></path></svg></button>
+            <button class="btn sm ic" aria-label="Stop work"><svg viewBox="0 0 16 16" aria-hidden="true"><rect class="icf" x="4" y="4" width="8" height="8" rx="1.5"></rect></svg></button>
+          </div>
+          <div class="card" style="display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 12px">
+            <div style="flex: 1; min-width: 0"><div style="display: flex; align-items: baseline; gap: 8px"><span style="font-weight: 600">all up</span><span class="count" style="color: var(--st-running)">3/3 up</span></div><div class="dim" style="font-size: 11px">▶ disabled, ■ is the action</div></div>
+            <button class="btn sm ic" disabled="" aria-label="Start"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="icf" d="M5 3.2v9.6l7.4-4.8z"></path></svg></button>
+            <button class="btn sm ic" aria-label="Stop"><svg viewBox="0 0 16 16" aria-hidden="true"><rect class="icf" x="4" y="4" width="8" height="8" rx="1.5"></rect></svg></button>
+          </div>
+          <div class="card" style="display: flex; align-items: center; gap: 10px; padding: 8px 8px 8px 12px">
+            <div style="flex: 1; min-width: 0"><div style="display: flex; align-items: baseline; gap: 8px"><span style="font-weight: 600">work</span><span class="count" style="color: var(--st-busy)"><span class="st busy" aria-hidden="true">◌</span> starting 2 of 3…</span></div><div class="dim" style="font-size: 11px">in-flight: count + spinner</div></div>
+            <button class="btn sm ic" aria-label="Stop"><svg viewBox="0 0 16 16" aria-hidden="true"><rect class="icf" x="4" y="4" width="8" height="8" rx="1.5"></rect></svg></button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Chips &amp; tags</div>
+        <div style="display: grid; grid-template-columns: 110px minmax(0, 1fr); row-gap: 10px; align-items: center; font-size: 12px">
+          <span class="dim">Port chip</span><span style="display: flex; gap: 6px"><button class="port">:5433</button><button class="port" style="text-decoration: underline">:8025</button><span class="dim3" style="font-size: 11px">hover</span></span>
+          <span class="dim">Address chip</span><span><button class="port">192.168.64.5</button></span>
+          <span class="dim">Profile chip</span><span style="display: flex; gap: 6px"><span class="pchip">work<button aria-label="Remove"><svg viewBox="0 0 16 16" class="ico" style="width: 9px; height: 9px; stroke-width: 2" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8"></path></svg></button></span><button class="pchip add">+</button></span>
+          <span class="dim">Key tags</span><span style="display: flex; gap: 6px; flex-wrap: wrap"><span class="tag pk">PRIMARY KEY</span><span class="tag fk">FK → organizations.id</span><span class="tag">UNIQUE</span></span>
+          <span class="dim">Misc</span><span style="display: flex; gap: 6px"><span class="tag">Soon</span><span class="count">2/3</span></span>
+        </div>
+      </section>
+
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Buttons</div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+          <button class="btn prim">Start All</button>
+          <button class="btn">Restart</button>
+          <button class="btn dest">Force Stop…</button>
+          <button class="btn" disabled="">Start</button>
+          <button class="btn ic" aria-label="More"><svg viewBox="0 0 16 16" aria-hidden="true"><circle class="icf" cx="3.5" cy="8" r="1.3"></circle><circle class="icf" cx="8" cy="8" r="1.3"></circle><circle class="icf" cx="12.5" cy="8" r="1.3"></circle></svg></button>
+          <button class="btn sm">Next</button>
+          <button class="tbb" aria-label="Refresh"><svg viewBox="0 0 16 16" class="ico" aria-hidden="true"><path d="M13 8a5 5 0 1 1-1.6-3.7M13.2 2.6v2.6h-2.6"></path></svg></button>
+          <button class="tbb on" aria-pressed="true" style="font-size: 12px">Follow</button>
+          <button class="tbb" aria-pressed="false" style="font-size: 12px">Wrap</button>
+        </div>
+        <p class="dim" style="margin: 10px 0 0; font-size: 11px; line-height: 15px">Destructive buttons sit after a 0.5 pt divider or at the bottom of the view, end in “…”, and always confirm. Cancel is the default button in the sheet.</p>
+      </section>
+
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Segmented tabs · Picker(.segmented)</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: flex-start">
+          <div class="seg" role="tablist"><button class="on" role="tab" aria-selected="true">Logs</button><button role="tab" aria-selected="false">Database</button></div>
+          <div class="seg sm" role="tablist"><button role="tab" aria-selected="false">Data</button><button class="on" role="tab" aria-selected="true">Structure</button><button role="tab" aria-selected="false">SQL</button></div>
+        </div>
+      </section>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 24px">
+      <section class="card" style="padding: 16px 0; background: var(--bg-content); position: relative">
+        <div class="sec-h" style="margin: 0 16px 8px">Log lines · LogLineView</div>
+        <div class="logs" style="padding: 0; font-size: 11px; line-height: 17px">
+          <div class="ll"><span class="ts">18:10:53</span><span>LOG:  ready to accept connections</span></div>
+          <div class="ll dbg"><span class="ts">18:10:54</span><span>DEBUG:  autovacuum launcher started</span></div>
+          <div class="ll warn"><span class="ts">18:12:07</span><span>WARNING:  transaction in progress</span></div>
+          <div class="ll err"><span class="ts">18:14:31</span><span>ERROR:  relation "sessions" does not exist</span></div>
+          <div class="ll"><span class="ts">18:15:02</span><span><span class="a-b">[migrate]</span> <span class="a-g a-bold">✔</span> 0007 <span class="a-m">ansi</span> <span class="a-c">kept</span> <span class="a-y">as-is</span></span></div>
+        </div>
+        <div style="display: flex; justify-content: center; padding-top: 12px"><button class="jump">Jump to latest <span aria-hidden="true">↓</span></button></div>
+        <p class="dim" style="margin: 10px 16px 0; font-size: 11px; line-height: 15px">Time column: local time, log-ts. Level from the line prefix; ANSI SGR 30–37/90–97 map to ansi-* tokens. Pill appears when scrolled &gt; 1 line from bottom; Follow switches off.</p>
+      </section>
+
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Data grid cells · DataGridCell</div>
+        <div style="border-radius: 6px; overflow: hidden; box-shadow: 0 0 0 0.5px var(--sep-strong)">
+          <table class="dg" aria-label="Cell styles">
+            <thead><tr><th>value<span class="ty">text</span></th><th>NULL</th><th>truncated</th></tr></thead>
+            <tbody>
+              <tr><td>ada@hermes.dev</td><td class="null">NULL</td><td style="max-width: 120px">{"theme":"dark","beta":true}</td></tr>
+              <tr><td class="num">1042</td><td class="null">NULL</td><td style="max-width: 120px">2026-10-16 14:02:11+03</td></tr>
+              <tr class="sel"><td class="cur">selected cell</td><td class="null">NULL</td><td style="max-width: 120px">selected row</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="dim" style="margin: 10px 0 0; font-size: 11px; line-height: 15px">Numbers right-aligned, tabular. NULL is UI-font italic label-3, never the string “NULL”. Cells cap at 220 pt with an ellipsis; Space shows the full value.</p>
+      </section>
+
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">Project status line</div>
+        <div style="display: grid; grid-template-columns: 16px 104px minmax(0, 1fr); row-gap: 7px; column-gap: 6px; align-items: center; font-size: 12px">
+          <span class="st run" aria-hidden="true">●</span><span class="stw run" style="font-weight: 500">Running</span><span class="dim">Up 41 min</span>
+          <span class="st busy" aria-hidden="true">◌</span><span class="stw busy" style="font-weight: 500">Starting</span><span class="dim">waiting for :7878</span>
+          <span class="st unh" aria-hidden="true">▲</span><span class="stw unh" style="font-weight: 500">Unhealthy</span><span class="dim">GET / → 500</span>
+          <span class="st err" aria-hidden="true">✕</span><span class="stw err" style="font-weight: 500">Crashed</span><span class="dim">exit code 1</span>
+          <span class="st err" aria-hidden="true">✕</span><span class="stw err" style="font-weight: 500">Port conflict</span><span class="dim">7878 held by PID 3120</span>
+          <span class="st stop" aria-hidden="true">○</span><span class="stw stop" style="font-weight: 500">Needs config</span><span class="dim">no start command</span>
+        </div>
+      </section>
+
+      <section class="card" style="padding: 16px; background: var(--bg-content)">
+        <div class="sec-h" style="margin-bottom: 10px">VM info · no guest agent</div>
+        <div class="info" style="grid-template-columns: 90px minmax(0, 1fr)">
+          <div class="k">IP addresses</div><div class="v"><span class="dim" style="font-size: 12px">Needs the QEMU guest agent</span><a href="https://docs.getutm.app/guest-support/linux/" style="font-size: 12px">How to install</a></div>
+        </div>
+      </section>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1360,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { theme: this.props.dark ? 'dark' : '' };
+  }
+}
+</script>
+</body>
+</html>
