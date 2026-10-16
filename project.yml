@@ -2,7 +2,7 @@ name: Hangar
 options:
   bundleIdPrefix: com.burakustun
   deploymentTarget:
-    macOS: "14.0"
+    macOS: "15.0"
 settings:
   base:
     SWIFT_VERSION: "6.0"
