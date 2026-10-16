@@ -1,0 +1,29 @@
+name: Hangar
+options:
+  bundleIdPrefix: com.burakustun
+  deploymentTarget:
+    macOS: "14.0"
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+targets:
+  Hangar:
+    type: application
+    platform: macOS
+    sources: [Sources]
+    info:
+      path: Sources/Info.plist
+      properties:
+        CFBundleDisplayName: Hangar
+        CFBundleName: Hangar
+        LSUIElement: true
+        NSAppleEventsUsageDescription: Hangar starts, stops and suspends your UTM virtual machines.
+    settings:
+      base:
+        PRODUCT_NAME: Hangar
+        PRODUCT_BUNDLE_IDENTIFIER: com.burakustun.hangar
+        MARKETING_VERSION: 0.1.0
+        CURRENT_PROJECT_VERSION: 1
+        ENABLE_APP_SANDBOX: NO
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "-"
