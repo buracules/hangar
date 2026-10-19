@@ -45,6 +45,14 @@ final class HangarStore {
   /// Live runs by project id, made on first start. Runs are this process's children, so the
   /// CLI never sees the app's runs.
   var projectRuns: [UUID: ProjectRun] = [:]
+  /// Serves `http://<name>.localhost`. Only the menu bar app starts it, never the CLI.
+  @ObservationIgnored let proxy = LocalhostProxy()
+  /// The port the proxy listens on; nil until it starts, or when every candidate was taken.
+  var proxyPort: UInt16?
+  /// The hostname each running project is served at, by project id.
+  var proxiedHosts: [UUID: String] = [:]
+  /// Why a running project has no hostname: "portal.localhost is served by portal-v2".
+  var routeNotes: [UUID: String] = [:]
 
   /// Database tab state per container name, kept while the app runs.
   @ObservationIgnored var databaseModels: [String: DatabaseModel] = [:]
@@ -102,6 +110,7 @@ final class HangarStore {
     async let containers: Void = refreshContainers()
     _ = await (vms, containers)
     noteStatusChanges()
+    updateRoutes()
   }
 
   /// Whether a UTM process exists right now.

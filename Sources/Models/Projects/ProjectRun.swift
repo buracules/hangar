@@ -36,7 +36,9 @@ final class ProjectRun {
     case failed(String)
   }
 
-  private(set) var state = State.stopped
+  private(set) var state = State.stopped {
+    didSet { if state != oldValue { onChange?() } }
+  }
   /// The port it was given; may differ from the spec's when that one was taken.
   private(set) var port: Int?
   /// Why the port differs from the preferred one: "3000 was taken".
@@ -54,6 +56,10 @@ final class ProjectRun {
 
   /// Called with each event worth a line in the timeline.
   @ObservationIgnored var record: Recorder?
+  /// Called after every state change, so the proxy can re-route.
+  @ObservationIgnored var onChange: (() -> Void)?
+  /// The address to open in the browser — the proxy's `*.localhost` one when it has it.
+  @ObservationIgnored var browserURL: ((String) -> URL?)?
 
   @ObservationIgnored private var process: ChildProcess?
   @ObservationIgnored private var probeTask: Task<Void, Never>?
@@ -199,7 +205,9 @@ final class ProjectRun {
         if await isListening(port) {
           state = .running
           record?(.running, "Ready on localhost:\(port)", nil, nil)
-          if spec.autoOpen, let url = url(openPath: spec.openPath) { NSWorkspace.shared.open(url) }
+          if spec.autoOpen, let url = browserURL?(spec.openPath) ?? url(openPath: spec.openPath) {
+            NSWorkspace.shared.open(url)
+          }
         } else {
           try? await Task.sleep(for: .milliseconds(Constants.startProbeMilliseconds))
         }

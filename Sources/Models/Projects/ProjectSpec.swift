@@ -24,6 +24,8 @@ struct ProjectSpec: Equatable, Sendable {
   /// `--port`.
   let portFlag: String?
   let openPath: String
+  /// `<name>.localhost`, from the config's `hostname` or the project's name.
+  let hostname: String
   let healthCheck: String?
   let autoOpen: Bool
   let restartOnCrash: Bool

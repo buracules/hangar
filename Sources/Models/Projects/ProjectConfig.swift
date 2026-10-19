@@ -9,7 +9,7 @@ struct ProjectConfig: Codable, Equatable, Sendable {
   var command: String?
   /// The port it should listen on, also passed as `PORT`.
   var port: Int?
-  /// For the future `*.localhost` proxy: `canvas.localhost`.
+  /// Where Hangar's proxy serves it: `canvas.localhost`; `<name>.localhost` by default.
   var hostname: String?
   /// The path Open in Browser goes to: `/`.
   var openPath: String?

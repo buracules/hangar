@@ -76,7 +76,7 @@ struct ProjectDetailView: View {
   @ViewBuilder
   private func actions(spec: ProjectSpec, run: ProjectRun?) -> some View {
     let isActive = run?.isActive == true
-    if isActive, let url = run?.url(openPath: spec.openPath) {
+    if isActive, let url = store.browserURL(for: project, openPath: spec.openPath) {
       Button("Open in Browser", systemImage: "safari") { NSWorkspace.shared.open(url) }
         .disabled(run?.state == .starting)
     }

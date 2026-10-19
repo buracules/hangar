@@ -20,6 +20,8 @@ extension HangarStore {
     run.record = { [activity] outcome, title, cause, detail in
       activity.record(id, outcome: outcome, title: title, cause: cause, detail: detail)
     }
+    run.onChange = { [weak self] in self?.updateRoutes() }
+    run.browserURL = { [weak self] openPath in self?.browserURL(for: project, openPath: openPath) }
     projectRuns[project.id] = run
     return run
   }

@@ -48,6 +48,10 @@ UTM: allow it.
   Flask or a plain Python app.
 - Picks a free port when the usual one is taken, waits until it answers, health-checks it,
   and shows its output live. Stopping it, or quitting Hangar, stops everything it spawned.
+- Each running project gets a stable address, `http://<name>.localhost` (or the `hostname`
+  you set), served by Hangar's built-in proxy — no port to remember, no /etc/hosts edits.
+  WebSockets and hot reload pass through. The proxy takes port 80 when it is free
+  (otherwise 7878, 8787 or 9977) and only answers this Mac.
 - Configure it with a `.hangar.json` in the project folder when detection is not enough:
 
   ```json
@@ -55,6 +59,7 @@ UTM: allow it.
     "name": "Canvas",
     "command": "node --watch server.js",
     "port": 4301,
+    "hostname": "canvas.localhost",
     "healthCheck": "/api/health",
     "openPath": "/",
     "autoOpen": true,

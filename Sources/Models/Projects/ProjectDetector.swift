@@ -46,6 +46,8 @@ enum ProjectDetector {
       // A hand-written command is used as is.
       portFlag: config?.command == nil ? detected?.portFlag : nil,
       openPath: config?.openPath ?? Constants.defaultOpenPath,
+      hostname: config?.hostname.flatMap(LocalhostName.normalize)
+        ?? LocalhostName.defaultHost(for: config?.name ?? project.folderName),
       healthCheck: config?.healthCheck,
       autoOpen: config?.autoOpen ?? false,
       restartOnCrash: config?.restartOnCrash ?? false,

@@ -98,8 +98,13 @@ struct ProjectInfoGrid: View {
 
   @ViewBuilder
   private var urlValue: some View {
-    if run?.isActive == true, let url = run?.url(openPath: spec.openPath) {
-      Link(url.absoluteString, destination: url).font(.mono(FontSize.smallMono))
+    if run?.isActive == true, let url = store.browserURL(for: project, openPath: spec.openPath) {
+      HStack(spacing: Spacing.xs) {
+        Link(url.absoluteString, destination: url).font(.mono(FontSize.smallMono))
+        if let note = store.routeNotes[project.id] {
+          Text(note).font(.ui(FontSize.subheadline)).foregroundStyle(Color.secondaryLabel)
+        }
+      }
     } else {
       dashed(nil)
     }

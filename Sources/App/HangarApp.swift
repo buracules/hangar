@@ -49,6 +49,7 @@ private struct MenuBarLabel: View {
       .task {
         if let appearance = LaunchOptions.appearance { NSApp.appearance = appearance }
         store.startPolling()
+        store.startProxy()
         // Projects are Hangar's children; take them down rather than orphan them.
         NotificationCenter.default.addObserver(
           forName: NSApplication.willTerminateNotification,
